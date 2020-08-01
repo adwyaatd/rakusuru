@@ -6,6 +6,7 @@ Rails.application.routes.draw do
 	resources :homes do
 		collection do
 			get :scr
+			get :scr2
 		end
 	end
 end

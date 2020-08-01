@@ -9,6 +9,11 @@ class HomesController < ApplicationController
 		"テスト"
 	end
 
+	def scr2
+
+	end
+
+
 	def scr
 		d = Selenium::WebDriver.for :chrome
 
