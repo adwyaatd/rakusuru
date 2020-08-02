@@ -23,8 +23,8 @@ class HomesController < ApplicationController
 
 		@content = d.find_element(:xpath,'//*[@id="main"]/div[2]/div[1]/div/table/tbody/tr[2]/td[1]')
 		@text=@content.text
-		@test="テスト"
-		# pp @content.text
+
+		pp @text
 
 		# sleep(10)
 		d.quit
