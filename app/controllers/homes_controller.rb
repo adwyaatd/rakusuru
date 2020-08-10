@@ -15,12 +15,12 @@ class HomesController < ApplicationController
 
 
 	def scr
-		#headlessモード
+		# headlessモード
 		options = Selenium::WebDriver::Chrome::Options.new
 		options.add_argument('--headless')
 		d = Selenium::WebDriver.for :chrome, options: options
 
-		#通常モード
+		# #通常モード
 		# d = Selenium::WebDriver.for :chrome
 
 		d.navigate.to 'https://kakaku.com/game/game-console/itemlist.aspx?pdf_se=16'

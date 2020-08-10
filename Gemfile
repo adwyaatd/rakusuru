@@ -65,8 +65,8 @@ end
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 group :production, :staging do
-    gem 'unicorn'
-		gem 'webdrivers'
-		gem 'capybara'
-		gem 'selenium-webdriver'
+	gem 'unicorn'
+	gem 'webdrivers'
+	gem 'capybara'
+	gem 'selenium-webdriver'
 end
