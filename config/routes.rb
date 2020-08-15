@@ -9,4 +9,8 @@ Rails.application.routes.draw do
 			get :scr2
 		end
 	end
+
+	resources :s1_switches do
+
+	end
 end
