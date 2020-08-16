@@ -11,6 +11,8 @@ Rails.application.routes.draw do
 	end
 
 	resources :s1_switches do
+	end
 
+	resources :s2dmms do
 	end
 end
