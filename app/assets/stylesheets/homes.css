@@ -1,8 +1,4 @@
-// Place all the styles related to the Homes controller here.
-// They will automatically be included in application.css.
-// You can use Sass (SCSS) here: https://sass-lang.com/
-
-
+@charset "UTF-8";
 /* フラッシュ ================================ */
 .flash {
   margin-left: 25%;
@@ -17,3 +13,4 @@
   width: 50%;
   font-size: 15px;
 }
+/*# sourceMappingURL=homes.css.map */
