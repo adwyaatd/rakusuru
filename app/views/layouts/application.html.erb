@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+		<meta charset="UTF-8">
     <title>Rakusuru</title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
@@ -18,6 +19,11 @@
   </head>
 
   <body>
+		<% if flash[:notice] %>
+      <div class="flash">
+        <%= flash[:notice] %>
+      </div>
+    <% end %>
     <%= yield %>
   </body>
 </html>
