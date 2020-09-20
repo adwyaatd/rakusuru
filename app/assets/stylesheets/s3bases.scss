@@ -9,13 +9,27 @@
 
 table{
 	width: 100%;
-	.colgroup_3{
+	.td_shop_name{
 		width: 30%;
-		background-color: #ffe8fa;
 	}
+	.td_about_shop{
+		width: 50%;
+		// height: 100%;
+		// background-color: rgb(146, 137, 137);
+	}
+	.td_contact_url{
+		// width: 10px;
+		// white-space: nowrap;
+		// background-color: rgb(146, 137, 137);
+	}
+	.td_shop_url{
+		width: 7%;
+	}
+
 	.cell-scroll{
-		white-space: nowrap;
-		overflow-x: auto;
-		width: 400px;
+		font-size: 11px;
+		// white-space: nowrap;
+		overflow-y: auto;
+		height: 60px;
 	}
 }

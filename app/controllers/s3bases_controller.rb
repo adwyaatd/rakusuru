@@ -37,7 +37,7 @@ class S3basesController < ApplicationController
 				)
 				if d.save
 					pp "保存成功"
-					flash[:notice] = "保存成功"
+					flash[:notice] = "収集成功"
 				else
 					pp "失敗"
 					flash[:notice] = "失敗"
