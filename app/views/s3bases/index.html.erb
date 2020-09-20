@@ -1,0 +1,35 @@
+<h1>BASEのショップ情報</h1>
+
+<h1><%= link_to"ショップ情報を収集", s3bases_path, method: :post %></h1>
+
+<div class="container">
+	<% if @shop_datas%>
+			<table border="1">
+				<colgroup span="2"></colgroup>
+				<colgroup span="1" class="colgroup_3"></colgroup>
+				<colgroup span="3"></colgroup>
+					<tr>
+						<%# <th>ID</th> %>
+						<th><%= label_tag :test1, "チェック" %></th>
+						<th>ショップ名</th>
+						<th>キーワード</th>
+						<th>問い合わせフォーム</th>
+						<th>ショップURL</th>
+						<th>ショップNo.</th>
+					</tr>
+					<% @shop_datas.each do |data| %>
+						<tr>
+								<!--〜<td><%= data.id %></td>-->
+								<td><%= check_box_tag :test1 %></td>
+								<td><%= data.shop_name %></td>
+								<td><div class="cell-scroll"></div><%= data.about_shop %></td>
+								<td><a href="<%= data.contact_url %>" target="_blank" rel=”noopener noreferrer”><%= data.contact_url %></a></td>
+								<td><a href="<%= data.shop_url %>" target="_blank" rel=”noopener noreferrer”><%= data.shop_url %></a></td>
+								<td><%= data.id %></td>
+						</tr>
+					<% end %>
+			</table>
+	<% end %>
+</div>
+
+<%= link_to"トップへ戻る",root_path%>

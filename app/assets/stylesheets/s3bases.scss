@@ -1,0 +1,21 @@
+// Place all the styles related to the s3bases controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: https://sass-lang.com/
+
+.container{
+	width: 95%;
+	margin: 0 auto;
+}
+
+table{
+	width: 100%;
+	.colgroup_3{
+		width: 30%;
+		background-color: #ffe8fa;
+	}
+	.cell-scroll{
+		white-space: nowrap;
+		overflow-x: auto;
+		width: 400px;
+	}
+}

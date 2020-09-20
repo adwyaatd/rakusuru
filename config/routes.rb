@@ -15,4 +15,7 @@ Rails.application.routes.draw do
 
 	resources :s2dmms do
 	end
+
+	resources :s3bases do
+	end
 end
