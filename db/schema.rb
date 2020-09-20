@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_19_144823) do
+ActiveRecord::Schema.define(version: 2020_09_20_132734) do
 
   create_table "s1_switches", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "price"
@@ -26,12 +26,13 @@ ActiveRecord::Schema.define(version: 2020_09_19_144823) do
   end
 
   create_table "s3bases", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.integer "shop_no"
     t.string "shop_name"
     t.text "contact_url"
+    t.text "shop_url"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.integer "shop_no"
-    t.text "shop_url"
+    t.text "about_shop"
   end
 
 end
