@@ -13,12 +13,12 @@ class S3base < ApplicationRecord
 
 	def self.scr3
 		# headlessモード
-		# options = Selenium::WebDriver::Chrome::Options.new
-		# options.add_argument('--headless')
-		# d = Selenium::WebDriver.for :chrome, options: options
+		options = Selenium::WebDriver::Chrome::Options.new
+		options.add_argument('--headless')
+		d = Selenium::WebDriver.for :chrome, options: options
 
 		#通常モード
-		d = Selenium::WebDriver.for :chrome
+		# d = Selenium::WebDriver.for :chrome
 
 		wait = Selenium::WebDriver::Wait.new(:timeout => 5)
 		d.manage.timeouts.page_load = 10
