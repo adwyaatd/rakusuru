@@ -49,7 +49,7 @@ class S3base < ApplicationRecord
 			top_url = d.current_url
 
 			# グーグルの検索結果10ページ目まで処理を繰り返す
-			while page <= 10
+			while page <= 1
 				# 各ショップサイトのURLを取得
 				elements = wait.until{ d.find_elements(:xpath,"id('rso')/div/div/div[1]/a")}
 				urls = elements.map{|element| element.attribute("href")}
@@ -57,7 +57,9 @@ class S3base < ApplicationRecord
 				urls.each do |url|
 					logger.debug("サイトページへ")
 					begin
+						logger.debug(__LINE__)
 						d.navigate.to url
+						logger.debug(__LINE__)
 					rescue => e
 						logger.debug(e)
 						d.navigate.refresh
@@ -106,7 +108,7 @@ class S3base < ApplicationRecord
 
 				# 次のページに遷移(10ページ目まで)
 				page += 1
-				if page <= 10
+				if page <= 1
 					wait.until{d.find_element(:link_text,page)}.click
 				end
 				logger.debug("page:#{page}")
