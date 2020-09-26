@@ -8,7 +8,6 @@ class S2dmm < ApplicationRecord
 
 		begin
 			begin
-				require 'open_uri'
 				pp "headlessモード"
 				options = Selenium::WebDriver::Chrome::Options.new
 				options.add_argument('--headless')
