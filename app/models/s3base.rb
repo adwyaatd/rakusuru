@@ -22,13 +22,13 @@ class S3base < ApplicationRecord
 
 		begin
 			begin
-				# pp "headlessモード"
-				# options = Selenium::WebDriver::Chrome::Options.new
-				# options.add_argument('--headless')
-				# d = Selenium::WebDriver.for :chrome, options: options
+				pp "headlessモード"
+				options = Selenium::WebDriver::Chrome::Options.new
+				options.add_argument('--headless')
+				d = Selenium::WebDriver.for :chrome, options: options
 
-				pp "通常モード"
-				d = Selenium::WebDriver.for :chrome
+				# pp "通常モード"
+				# d = Selenium::WebDriver.for :chrome
 
 				pp "検索ページへ遷移"
 				d.navigate.to 'https://www.google.co.jp/'
