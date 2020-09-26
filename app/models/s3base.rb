@@ -22,25 +22,25 @@ class S3base < ApplicationRecord
 
 		begin
 			begin
-				pp "headlessモード"
+				logger.debug("headlessモード")
 				options = Selenium::WebDriver::Chrome::Options.new
 				options.add_argument('--headless')
 				d = Selenium::WebDriver.for :chrome, options: options
 
-				# pp "通常モード"
+				# logger.debug("通常モード")
 				# d = Selenium::WebDriver.for :chrome
 
-				pp "検索ページへ遷移"
+				logger.debug("検索ページへ遷移")
 				d.navigate.to 'https://www.google.co.jp/'
 			rescue => e
 				logger.error("----------------------[error]file:#{$0},line:#{__LINE__},error:#{e}-------------------")
 				sleep(1)
 				retry_cnt += 1
-				pp retry_cnt
+				logger.debug(retry_cnt)
 				retry if retry_cnt <= 5
 			end
 
-			pp "入力した内容を検索バーに入力して検索"
+			logger.debug("入力した内容を検索バーに入力して検索")
 			search_bar = d.find_element(:name,"q")
 			search_bar.send_key("site:*.thebase.in", :enter)
 
@@ -55,41 +55,41 @@ class S3base < ApplicationRecord
 				urls = elements.map{|element| element.attribute("href")}
 
 				urls.each do |url|
-					pp "サイトページへ"
+					logger.debug("サイトページへ")
 					begin
 						d.navigate.to url
 					rescue => e
-						pp e
+						logger.debug(e)
 						d.navigate.refresh
 					end
 
 					#各サイト内の処理
 					# Base以外のサイトに入った場合
 					unless check_element(d,:id, "baseMenu")
-						pp "Base以外に入った"
+						logger.debug("Base以外に入った")
 						next
 					end
 
 					# ショップ名取得
 					shop_name = wait.until{ d.title }
-					pp "ショップ名"
-					pp shop_name
+					logger.debug("ショップ名")
+					logger.debug(shop_name)
 
 					about_shop = d.find_element(:name,"description").attribute("content")
-					pp "about_shop:#{about_shop}"
+					logger.debug("about_shop:#{about_shop}")
 
 					shop_url = d.current_url
-					pp shop_url
+					logger.debug(shop_url)
 					h = %r(https://)
 					t = %r(.thebase.in/)
 					w = %r(www.)
 					j = %r(.jp/)
 					shop = shop_url.gsub(h,"").gsub(t,"").gsub(w,"").gsub(j,"")
-					pp shop
+					logger.debug(shop)
 					contact_url = "https://thebase.in/inquiry/#{shop}"
 
-					pp "問い合わせフォーム"
-					pp contact_url
+					logger.debug("問い合わせフォーム")
+					logger.debug(contact_url)
 
 					shop_no = n
 
@@ -99,8 +99,8 @@ class S3base < ApplicationRecord
 
 					n += 1
 				end
-				pp "datas"
-				pp datas
+				logger.debug("datas")
+				logger.debug(datas)
 
 				d.navigate.to top_url
 
@@ -109,16 +109,16 @@ class S3base < ApplicationRecord
 				if page <= 10
 					wait.until{d.find_element(:link_text,page)}.click
 				end
-				pp "page:#{page}"
+				logger.debug("page:#{page}")
 			end
 
-			pp "全ページ完了"
+			logger.debug("全ページ完了")
 
-			pp "AllOK"
+			logger.debug("AllOK")
 			d.quit
 			return datas
 		rescue => e
-			pp "エラー発生"
+			logger.debug("エラー発生")
 			logger.error("----------------------[error]file:#{$0},line:#{__LINE__},error:#{e}---------------------------")
 			d.quit
 			return array
