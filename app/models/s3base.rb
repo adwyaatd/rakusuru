@@ -18,6 +18,8 @@ class S3base < ApplicationRecord
 
 		n = 1
 
+		retry_cnt = 0
+
 		wait = Selenium::WebDriver::Wait.new(:timeout => 5)
 
 		begin
@@ -123,7 +125,7 @@ class S3base < ApplicationRecord
 			logger.debug("エラー発生")
 			logger.error("----------------------[error]file:#{$0},line:#{__LINE__},error:#{e}---------------------------")
 			d.quit
-			return array
+			return datas
 		end
 	end
 
