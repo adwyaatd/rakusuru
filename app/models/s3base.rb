@@ -107,7 +107,7 @@ class S3base < ApplicationRecord
 
 					shop_no = n
 
-					logger.debug("shop_no:#{shop_no}"")
+					logger.debug("shop_no:#{shop_no}")
 
 					shop_data = {shop_no:shop_no,shop_name:shop_name,about_shop:about_shop,contact_url:contact_url,shop_url:shop_url}
 
