@@ -61,6 +61,12 @@ class S3base < ApplicationRecord
 
 				urls.each do |url|
 					logger.debug("サイトページへ")
+
+					if url == "https://marusanrouho.thebase.in/"
+						logger.debug("丸三")
+						next
+					end
+
 					begin
 						logger.debug(__LINE__)
 						d.navigate.to url
