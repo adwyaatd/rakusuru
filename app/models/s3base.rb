@@ -27,7 +27,6 @@ class S3base < ApplicationRecord
 				logger.debug("headlessモード")
 				options = Selenium::WebDriver::Chrome::Options.new
 				options.add_argument('--headless')
-				# options.add_argument('--disable-features=RendererCodeIntegrity')
 				d = Selenium::WebDriver.for :chrome, options: options
 
 				# logger.debug("通常モード")
@@ -52,27 +51,17 @@ class S3base < ApplicationRecord
 			top_url = d.current_url
 
 			# グーグルの検索結果10ページ目まで処理を繰り返す
-			while page <= 3
+			while page <= 1
 				# 各ショップサイトのURLを取得
 				elements = wait.until{ d.find_elements(:xpath,"id('rso')/div/div/div[1]/a")}
 				urls = elements.map{|element| element.attribute("href")}
 
-				logger.debug(urls)
-
 				urls.each do |url|
 					logger.debug("サイトページへ")
-
-					if url == "https://marusanrouho.thebase.in/"
-						logger.debug("丸三")
-						next
-					end
-
 					begin
-						logger.debug(__LINE__)
 						d.navigate.to url
-						logger.debug(__LINE__)
 					rescue => e
-						logger.debug(__LINE__)
+						logger.debug("d.navigate.to urlエラー 次のショップへスキップ")
 						logger.debug(e)
 						next
 					end
@@ -107,7 +96,7 @@ class S3base < ApplicationRecord
 
 					shop_no = n
 
-					logger.debug("shop_no:#{shop_no}")
+					# logger.debug("shop_no:#{shop_no}")
 
 					shop_data = {shop_no:shop_no,shop_name:shop_name,about_shop:about_shop,contact_url:contact_url,shop_url:shop_url}
 
@@ -115,17 +104,15 @@ class S3base < ApplicationRecord
 
 					n += 1
 				end
-				logger.debug("datas")
-				logger.debug(datas)
+				# logger.debug("datas")
+				# logger.debug(datas)
 
 				d.navigate.to top_url
 
 				# 次のページに遷移(10ページ目まで)
 				page += 1
-				if page <= 10
-					wait.until{d.find_element(:link_text,page)}.click
-				end
 				logger.debug("page:#{page}")
+				wait.until{d.find_element(:link_text,page)}.click
 			end
 
 			logger.debug("全ページ完了")
