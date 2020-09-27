@@ -51,7 +51,7 @@ class S3base < ApplicationRecord
 			top_url = d.current_url
 
 			# グーグルの検索結果10ページ目まで処理を繰り返す
-			while page <= 1
+			while page <= 2
 				# 各ショップサイトのURLを取得
 				elements = wait.until{ d.find_elements(:xpath,"id('rso')/div/div/div[1]/a")}
 				urls = elements.map{|element| element.attribute("href")}
