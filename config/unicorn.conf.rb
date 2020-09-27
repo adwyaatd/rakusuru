@@ -1,6 +1,6 @@
 # set lets
 $worker  = 2
-$timeout = 30
+$timeout = 7777777
 $app_dir = "/var/www/rails/rakusuru"
 $listen  = File.expand_path 'tmp/sockets/.unicorn.sock', $app_dir
 $pid     = File.expand_path 'tmp/pids/unicorn.pid', $app_dir
