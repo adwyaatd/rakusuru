@@ -27,6 +27,7 @@ class S3base < ApplicationRecord
 				logger.debug("headlessモード")
 				options = Selenium::WebDriver::Chrome::Options.new
 				options.add_argument('--headless')
+				# options.add_argument('--disable-features=RendererCodeIntegrity')
 				d = Selenium::WebDriver.for :chrome, options: options
 
 				# logger.debug("通常モード")
@@ -56,6 +57,8 @@ class S3base < ApplicationRecord
 				elements = wait.until{ d.find_elements(:xpath,"id('rso')/div/div/div[1]/a")}
 				urls = elements.map{|element| element.attribute("href")}
 
+				logger.debug(urls)
+
 				urls.each do |url|
 					logger.debug("サイトページへ")
 					begin
@@ -65,7 +68,7 @@ class S3base < ApplicationRecord
 					rescue => e
 						logger.debug(__LINE__)
 						logger.debug(e)
-						d.navigate.refresh
+						next
 					end
 
 					#各サイト内の処理
