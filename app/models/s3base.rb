@@ -58,14 +58,15 @@ class S3base < ApplicationRecord
 
 				urls.each do |url|
 					logger.debug("サイトページへ")
-					# begin
+					begin
 						logger.debug(__LINE__)
 						d.navigate.to url
 						logger.debug(__LINE__)
-					# rescue => e
-					# 	logger.debug(e)
-					# 	d.navigate.refresh
-					# end
+					rescue => e
+						logger.debug(__LINE__)
+						logger.debug(e)
+						d.navigate.refresh
+					end
 
 					#各サイト内の処理
 					# Base以外のサイトに入った場合
