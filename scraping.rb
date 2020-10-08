@@ -226,5 +226,3 @@ end
 pp "AllOK"
 return array
 d.quit
-
-#
