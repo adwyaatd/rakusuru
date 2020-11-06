@@ -4,7 +4,7 @@ class S3basesController < ApplicationController
   end
 
 	def create
-		datas = S3base.scr3
+		datas = S3base.scr3(params[:search])
 
 		if !datas.empty?
 			datas.each do |data|
@@ -45,6 +45,14 @@ class S3basesController < ApplicationController
 			logger.debug( "==========================失敗==========================")
 		end # !datas.empty?
 
+		redirect_to s3bases_url
+	end
+
+	def search
+		@shop_datas = S3base.search(params[:search])
+		if @shop_datas == nil
+			flash[:notice] = "検索したキーワードに該当するショップはありませんでした"
+		end
 		redirect_to s3bases_url
 	end
 

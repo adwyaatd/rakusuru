@@ -1,26 +1,21 @@
 class S2dmmsController < ApplicationController
 	def index
-		@img_srcs = S2dmm.all
+		@img_srcs = S2dmm.last(20)
 	end
 
 	def create
-		array = S2dmm.scr2
+		array = S2dmm.scr2(params[:search])
 
 		if !array.empty?
 			#空（scr2でエラーだった）ではない
 			array.each_with_index do |img_src,n|
 				if S2dmm.find_by(image_url: img_src)
 					pp "image_url取得済み"
-					# d = S2dmm.find_by(image_url: array[:image_src])
-					# pp "id:#{d.id}"
-					# d.update(
-					# 	image_url: array[:image_src]
-					# )
 				else
 					# ない=未登録なので新規登録
 					pp "image_url:新規登録"
 					l = S2dmm.create(
-						name: "レモン#{n}",
+						name:"#{params[:search]} #{n}",
 						image_url: img_src
 					)
 				end

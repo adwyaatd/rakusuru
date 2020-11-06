@@ -1,12 +1,14 @@
 class S1Switch < ApplicationRecord
 	def self.scr1
-		# headlessモード
-		options = Selenium::WebDriver::Chrome::Options.new
-		options.add_argument('--headless')
-		d = Selenium::WebDriver.for :chrome, options: options
-
-		# #通常モード
-		# d = Selenium::WebDriver.for :chrome
+		if Rails.env.development? || Rails.env.test?
+			logger.debug( "通常モード")
+			d = Selenium::WebDriver.for :chrome
+		else
+			logger.debug( "headlessモード")
+			options = Selenium::WebDriver::Chrome::Options.new
+			options.add_argument('--headless')
+			d = Selenium::WebDriver.for :chrome, options: options
+		end
 
 		d.navigate.to 'https://kakaku.com/game/game-console/itemlist.aspx?pdf_se=16'
 

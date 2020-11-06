@@ -11,7 +11,11 @@ class S3base < ApplicationRecord
 		return ret
 	end
 
-	def self.scr3
+	def self.search(search)
+		shop_datas = S3base.where(["about_shop LIKE ?","%#{search}%"])
+	end
+
+	def self.scr3(search_word)
 		page = 1
 
 		datas = []
@@ -24,13 +28,15 @@ class S3base < ApplicationRecord
 
 		begin
 			begin
-				logger.debug("headlessモード")
-				options = Selenium::WebDriver::Chrome::Options.new
-				options.add_argument('--headless')
-				d = Selenium::WebDriver.for :chrome, options: options
-
-				# logger.debug("通常モード")
-				# d = Selenium::WebDriver.for :chrome
+				if Rails.env.development? || Rails.env.test?
+					logger.debug( "通常モード")
+					d = Selenium::WebDriver.for :chrome
+				else
+					logger.debug( "headlessモード")
+					options = Selenium::WebDriver::Chrome::Options.new
+					options.add_argument('--headless')
+					d = Selenium::WebDriver.for :chrome, options: options
+				end
 
 				logger.debug("検索ページへ遷移")
 				d.navigate.to 'https://www.google.co.jp/'
@@ -44,7 +50,7 @@ class S3base < ApplicationRecord
 
 			logger.debug("入力した内容を検索バーに入力して検索")
 			search_bar = d.find_element(:name,"q")
-			search_bar.send_key("site:*.thebase.in", :enter)
+			search_bar.send_key("site:*.thebase.in #{search_word}", :enter)
 
 			sleep(1)
 

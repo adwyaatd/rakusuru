@@ -17,5 +17,8 @@ Rails.application.routes.draw do
 	end
 
 	resources :s3bases do
+		collection do
+			get "search"
+		end
 	end
 end

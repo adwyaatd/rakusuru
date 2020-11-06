@@ -1,5 +1,5 @@
 class S2dmm < ApplicationRecord
-	def self.scr2
+	def self.scr2(search_word)
 
 		array = []
 
@@ -8,13 +8,15 @@ class S2dmm < ApplicationRecord
 
 		begin
 			begin
-				logger.debug( "headlessモード")
-				options = Selenium::WebDriver::Chrome::Options.new
-				options.add_argument('--headless')
-				d = Selenium::WebDriver.for :chrome, options: options
-
-				# logger.debug( "通常モード")
-				# d = Selenium::WebDriver.for :chrome
+				if Rails.env.development? || Rails.env.test?
+					logger.debug( "通常モード")
+					d = Selenium::WebDriver.for :chrome
+				else
+					logger.debug( "headlessモード")
+					options = Selenium::WebDriver::Chrome::Options.new
+					options.add_argument('--headless')
+					d = Selenium::WebDriver.for :chrome, options: options
+				end
 
 				logger.debug( "検索ページへ遷移")
 				d.navigate.to 'https://www.google.co.jp/imghp?hl=ja&tab=ri&authuser=0&ogbl'
@@ -28,7 +30,7 @@ class S2dmm < ApplicationRecord
 
 			logger.debug("入力した内容を検索バーに入力して検索")
 			search_bar = wait.until{ d.find_element(:name,"q") }
-			search_bar.send_key("レモン", :enter)
+			search_bar.send_key(search_word, :enter)
 
 			logger.debug( "ライセンスフリーの画像に絞り込む（「ツール」→「ライセンス」→「再使用が許可された画像」を選択）")
 			logger.debug( "ツールをクリック")

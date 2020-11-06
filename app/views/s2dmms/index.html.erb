@@ -2,11 +2,17 @@
 <h2>こちらは入力したワードの画像をネット上から収集して表示するシステムです。</h2>
 <p>著作権のライセンスフリーの画像のみを集めています！</p>
 
-<h1><%= link_to"レモンの画像を集める", s2dmms_path, method: :post %></h1>
+<!--<h1><%= link_to"レモンの画像を集める", s2dmms_path, method: :post %></h1>-->
 <p>※検索完了まで10〜30秒ほどかかることがあります</p>
-<p>※たまに検索に失敗します。失敗するとバグります。その場合はページを更新してください。</p>
+<!--<p>※たまに検索に失敗します。失敗するとバグります。その場合はページを更新してください。</p>-->
 
+<%= form_tag s2dmms_path,method: :post do%>
+	<%=text_field_tag :search,"",placeholder: "キーワードを入力" %>
+	<%= submit_tag "画像を収集", name: nil %>
+<% end %>
+<br>
 <%= link_to"トップページへ戻る",root_path%>
+<br>
 <br>
 
 <% if @img_srcs.present? %>
@@ -14,5 +20,6 @@
 		<img src="<%= i.image_url %>">
 	<% end %>
 <% end %>
+<br>
 
-<p>Powered by <a href="https://affiliate.dmm.com/api/">FANZA Webサービス</a></p>
+<%# <p>Powered by <a href="https://affiliate.dmm.com/api/">FANZA Webサービス</a></p> %>
