@@ -2,12 +2,15 @@ require	"selenium-webdriver"
 
 retry_cnt = 0
 
+pp __LINE__
+
 wait = Selenium::WebDriver::Wait.new(:timeout => 5)
 
 datas = []
 # begin
 
-  begin
+	begin
+		pp __LINE__
     # logger.debug("headlessモード")
     # options = Selenium::WebDriver::Chrome::Options.new
     # options.add_argument('--headless')

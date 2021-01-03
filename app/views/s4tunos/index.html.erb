@@ -1,0 +1,44 @@
+<br>
+<% if Rails.env.development? || Rails.env.test? %>
+	<%= link_to"トップページへ戻る",root_path%>
+<% end %>
+<br>
+<br>
+
+<div class="container">
+	<% if @gifts_datas%>
+			<table border="1">
+				<%# <colgroup span="2"></colgroup>
+				<colgroup span="1" class="colgroup_shop_name"></colgroup>
+				<colgroup span="1" class="colgroup_about_shop"></colgroup>
+				<colgroup span="1" class="colgroup_contact_url"></colgroup>
+				<colgroup span="1" class="colgroup_shop_url"></colgroup> %>
+					<tr>
+						<th><%= label_tag :test1, "チェック" %></th>
+						<th>No.</th>
+						<th>市区町村</th>
+						<th>返礼品名</th>
+						<th>寄付額</th>
+						<th><%= Date.today.prev_day(7) %></th>
+						<th><%= Date.today.prev_day(6) %></th>
+						<th><%= Date.today.prev_day(5) %></th>
+						<th><%= Date.today.prev_day(4) %></th>
+						<th><%= Date.today.prev_day(3) %></th>
+						<th><%= Date.today.prev_day(2) %></th>
+						<th><%= Date.today.prev_day(1) %></th>
+						<th><%= Date.today %></th>
+					</tr>
+					<% @gifts_datas.each_with_index do |data,i| %>
+					<tr>
+							<td><%= check_box_tag :test1 %></td>
+							<td><%= i+1 %></td>
+							<td class="td_shop_name"><%= data.municipality %></td>
+							<td class="td_shop_name"><%= data.ranking %></td>
+							<td class="td_about_shop"><div class="cell-scroll"><%= data.gift_name %></div></td>
+							<td class="td_contact_url"><%= data.donation_amount %></td>
+					</tr>
+					<% end %>
+			</table>
+	<% end %>
+</div>
+<br>

@@ -1,0 +1,35 @@
+// Place all the styles related to the S4tunos controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: https://sass-lang.com/
+
+.container{
+	width: 95%;
+	margin: 0 auto;
+}
+
+table{
+	width: 100%;
+	.td_shop_name{
+		width: 30%;
+	}
+	.td_about_shop{
+		width: 50%;
+		// height: 100%;
+		// background-color: rgb(146, 137, 137);
+	}
+	.td_contact_url{
+		// width: 10px;
+		// white-space: nowrap;
+		// background-color: rgb(146, 137, 137);
+	}
+	.td_shop_url{
+		width: 7%;
+	}
+
+	.cell-scroll{
+		font-size: 11px;
+		// white-space: nowrap;
+		overflow-y: auto;
+		height: 60px;
+	}
+}

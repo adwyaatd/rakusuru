@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  get 's4tunos/index'
 	root 'homes#top'
 	get '/' => 'homes#top'
 
@@ -20,5 +21,8 @@ Rails.application.routes.draw do
 		collection do
 			get "search"
 		end
+	end
+
+	resources :s4tunos do
 	end
 end
