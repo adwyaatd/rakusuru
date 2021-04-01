@@ -1,6 +1,6 @@
 class S3basesController < ApplicationController
 	def index
-		@shop_datas = S3base.all
+		@shop_datas = S3base.where(scraping_id: S3base.maximum(:scraping_id))
   end
 
 	def create
@@ -11,13 +11,14 @@ class S3basesController < ApplicationController
 				# データベース上にdata[:shop_name]またはdata[:shop_url]があるか検索
 				# result = S3base.where(shop_name: data[:shop_name]).or(S3base.where(shop_url: data[:shop_url]))
 				# logger.debug( "result:#{result}")
+				record1 = S3base.find_by(shop_name: data[:shop_name])
+				record2 = S3base.find_by(shop_url: data[:shop_url])
 
-				if S3base.find_by(shop_name: data[:shop_name]) || S3base.find_by(shop_url: data[:shop_url])
+				if record1 || record2
 					# ある=登録済みなのでデータ更新
 					logger.debug( "#{data[:shop_name]}:データ更新")
-					d = S3base.find_by(shop_name: data[:shop_name])
 					logger.debug( "id:#{d.id}")
-					d.update(
+					record1.update(
 						shop_no: data[:shop_no],
 						shop_name: data[:shop_name],
 						about_shop: data[:about_shop],
@@ -50,6 +51,7 @@ class S3basesController < ApplicationController
 
 	def search
 		@shop_datas = S3base.search(params[:search])
+		pp "@shop_datas:#{@shop_datas.inspect}"
 		if @shop_datas == nil
 			flash[:notice] = "検索したキーワードに該当するショップはありませんでした"
 		end
