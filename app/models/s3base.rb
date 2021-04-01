@@ -134,5 +134,86 @@ class S3base < ApplicationRecord
 		end
 	end
 
-	private_class_method :check_element
+	def self.bulk_submission(sender_info,shops)
+
+		logger.debug("sender_info:#{sender_info.inspect}")
+		logger.debug("shops:#{shops.inspect}")
+
+		core = Core.new
+
+		wait = Selenium::WebDriver::Wait.new(:timeout => 5)
+
+    begin
+      d = core.get_driver
+
+      shops.each_with_index do |shop, i|
+        logger.debug("問い合わせURLにアクセス")
+        d.navigate.to shop.contact_url
+
+        # Base以外のサイトに入った場合
+        unless core.check_element(d,:id, "baseMenu")
+          logger.debug("Base以外に入った")
+          next
+        end
+
+        shop_name = wait.until{ d.title }
+        unless shop_name.include?(shop.shop_name)
+          logger.debug("ショップ名不一致")
+          logger.debug("取得したショップ名：　　#{shop_name}")
+          logger.debug("用意していたショップ名：#{shop.shop_name}")
+          next
+        end
+
+        # 各欄に受け取った値を入力
+        name_element = d.find_element(:id,"ShopInquiryName")
+        name_element.send_key(sender_info.sender_name)
+
+        tel_element = d.find_element(:id,"ShopInquiryTel")
+        tel_element.send_key(sender_info.tel)
+
+        email_element = d.find_element(:id,"ShopInquiryMailAddress")
+        email_element.send_key(sender_info.email)
+
+        title_element = d.find_element(:id,"ShopInquiryTitle")
+        title_element.send_key(sender_info.title)
+
+        content_element = d.find_element(:id,"ShopInquiryInquiry")
+        content_element.send_key("#{sender_info.content}")
+
+				d.find_element(:id,"buttonLeave").click
+
+        unless core.check_element(d,:id, "inquiryConfirmSection")
+          logger.debug("確認ページ以外に入った")
+					sleep(10)
+          next
+        end
+
+        # d.find_element(:id,"buttonLeave").click
+        if core.check_element(d,:id,"buttonLeave")
+					pp "成功！"
+					shop.submit_status = 1
+        end
+
+        # unless core.check_element(d,:id, "inquiryCompleteSection")
+        #   logger.debug("完了ページ以外に入った")
+        #   next
+        # end
+
+
+        logger.debug("問い合わせ操作#{i}完了")
+      end
+
+      logger.debug("全問い合わせ操作完了")
+
+      d.quit
+
+			logger.debug("shops:#{shops}")
+			return shops
+    rescue => e
+      logger.debug("エラー発生")
+			logger.error("----------------------[error]file:#{$0},line:#{__LINE__},error:#{e}---------------------------")
+			d.quit
+			return shops
+    end
+	end
 end

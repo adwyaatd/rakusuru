@@ -1,0 +1,46 @@
+<%= link_to"トップページへ戻る",s3bases_path%>
+<br>
+
+<%= form_with model: @sender_info do |f|%>
+	<%= f.label :sender_name,"名前" %>
+	<%= f.text_field :sender_name %>
+	<br>
+	<%= f.label :tel,"電話番号" %>
+	<%= f.text_field :tel %>
+	<br>
+	<%= f.label :email,"メールアドレス" %>
+	<%= f.email_field :email %>
+	<br>
+	<%= f.label :title,"件名" %>
+	<%= f.text_field :title %>
+	<br>
+	<%= f.label :content,"内容" %>
+	<%= f.text_area :content %>
+	<br>
+	<%= f.submit "新規設定" %>
+<% end %>
+
+<div class="container">
+	<% if @sender_infos %>
+		<table border="1">
+			<tr>
+				<th>id</th>
+				<th>名前</th>
+				<th>tel</th>
+				<th>メールアドレス</th>
+				<th>件名</th>
+				<th>問い合わせ内容</th>
+			</tr>
+			<% @sender_infos.each do |info| %>
+			<tr>
+				<td class="td_shop_name"><%= info.id %></td>
+				<td class="td_shop_name"><%= info.sender_name %></td>
+				<td class="td_shop_name"><%= info.tel %></td>
+				<td class="td_shop_name"><%= info.email %></td>
+				<td class="td_shop_name"><%= info.title %></td>
+				<td class="td_shop_name"><div class="cell-scroll"><%= info.content %></div></td>
+			</tr>
+				<% end %>
+		</table>
+	<% end %>
+</div>

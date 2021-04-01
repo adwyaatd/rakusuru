@@ -56,4 +56,26 @@ class S3basesController < ApplicationController
 		redirect_to s3bases_url
 	end
 
+	def bulk_submission
+		pp "id:#{params[:ids]}"
+		@shops = S3base.where(id:params[:ids])
+		@sender_info = S3SenderInfo.last
+		pp "sender_info:#{@sender_info.inspect}"
+
+		@shops.each do |s|
+			pp "shop_name:#{s.shop_name}"
+		end
+		result = S3base.bulk_submission(@sender_info,@shops)
+		result.each do |r|
+			logger.debug( "#{r[:shop_name]}:データ更新")
+			s = S3base.find_by(id: r[:id])
+			logger.debug( "id:#{r.id}")
+			s.update(
+				submit_status: r[:submit_status]
+			)
+			logger.debug( "更新成功")
+		end
+		redirect_to s3bases_url
+	end
+
 end
