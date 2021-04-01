@@ -54,10 +54,10 @@
 	<%= submit_tag "システム内を検索", name: nil %>
 <% end %>
 
-<%= form_tag bulk_submission_s3bases_path,method: :post do %>
+<!--<%= form_tag bulk_submission_s3bases_path,method: :post do %>
 	<%= text_field_tag :search,"",placeholder: "キーワードを入力" %>
 	<%= submit_tag "一括問い合わせ" , name: nil %>
-<% end %>
+<% end %>-->
 
 <%# <h1>③エクセル出力機能</h1>
 <p>
@@ -71,32 +71,32 @@
 <% end %>
 <br>
 <br>
-
+<%# <p>test</p> %>
 
 <div class="container">
 	<% if @shop_datas%>
-		<input type="checkbox" id="all" /> 全チェック
+		<input type="checkbox" id="check_all">
+		<label for="check_all">全チェック</label>
 			<%= form_with url: bulk_submission_s3bases_path	do |f| %>
 				<table border="1">
+					<tr>
+						<th>チェック</th>
+						<th>No.</th>
+						<th>ショップ名</th>
+						<th>ショップ説明</th>
+						<th>問い合わせフォーム</th>
+						<th>ショップURL</th>
+					</tr>
+					<% @shop_datas.each do |data| %>
 						<tr>
-							<th><%= label_tag :ids, "チェック" %></th>
-							<th>No.</th>
-							<th>ショップ名</th>
-							<th>ショップ説明</th>
-							<th>問い合わせフォーム</th>
-							<th>ショップURL</th>
+							<td><%= f.check_box(:ids,{multiple: true},data.id,nil) %></td>
+							<td><%= data.id %></td>
+							<td class="td_shop_name"><%= data.shop_name %></td>
+							<td class="td_about_shop"><div class="cell-scroll"><%= data.about_shop %></div></td>
+							<td class="td_contact_url"><a href="<%= data.contact_url %>" target="_blank" rel=”noopener noreferrer”><%= data.contact_url %></a></td>
+							<td class="td_shop_url"><a href="<%= data.shop_url %>" target="_blank" rel=”noopener noreferrer”>サイトへ</a></td>
 						</tr>
-						<% @shop_datas.each do |data| %>
-							<tr>
-								<td><%= f.check_box(:ids,{multiple: true,checked: true},data.id,nil) %></td>
-								<td><%= data.id %></td>
-								<td class="td_shop_name"><%= data.shop_name %></td>
-								<td class="td_about_shop"><div class="cell-scroll"><%= data.about_shop %></div></td>
-								<td class="td_contact_url"><a href="<%= data.contact_url %>" target="_blank" rel=”noopener noreferrer”><%= data.contact_url %></a></td>
-								<td class="td_shop_url"><a href="<%= data.shop_url %>" target="_blank" rel=”noopener noreferrer”>サイトへ</a></td>
-							</tr>
-						<% end %>
-						<%#= link_to "問い合わせ", bulk_submission_s3bases_path(id: params[:id])%>
+					<% end %>
 				</table>
 				<%= f.submit "問い合わせ" %>
 			<% end %>
@@ -104,4 +104,4 @@
 </div>
 <br>
 
-<!--ー<%= link_to"トップへ戻る",root_path%>-->
+<%= javascript_pack_tag 's3base' %>
