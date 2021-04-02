@@ -11,10 +11,6 @@ class S3base < ApplicationRecord
 		return ret
 	end
 
-	def self.search(search)
-		shop_datas = S3base.where(["about_shop LIKE ?","%#{search}%"])
-	end
-
 	def self.scr3(search_word)
 		page = 1
 

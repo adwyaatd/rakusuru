@@ -1,6 +1,13 @@
 class S3basesController < ApplicationController
 	def index
-		@shop_datas = S3base.where(scraping_id: S3base.maximum(:scraping_id))
+		if params[:search]
+			@shop_datas = S3base.where(["(about_shop LIKE ?) OR (shop_name LIKE ?)","%#{params[:search]}%","%#{params[:search]}%"])
+			if @shop_datas.empty?
+				flash[:notice] = "検索したキーワードに該当するショップはありませんでした"
+			end
+		else
+			@shop_datas = S3base.where(scraping_id: S3base.maximum(:scraping_id))
+		end
   end
 
 	def create
@@ -46,15 +53,6 @@ class S3basesController < ApplicationController
 			logger.debug( "==========================失敗==========================")
 		end # !datas.empty?
 
-		redirect_to s3bases_url
-	end
-
-	def search
-		@shop_datas = S3base.search(params[:search])
-		pp "@shop_datas:#{@shop_datas.inspect}"
-		if @shop_datas == nil
-			flash[:notice] = "検索したキーワードに該当するショップはありませんでした"
-		end
 		redirect_to s3bases_url
 	end
 

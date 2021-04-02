@@ -1,30 +1,15 @@
 <h1>【テスト版】BASEのショップ情報収集システム</h1>
 
-<!--<h1>【テスト版でできること】</h1>
-<p>
-	①収集済みのショップ一覧情報（下記の表）の確認
-	<br>
-	②ショップごとのお問い合わせフォーム、サイトリンクへ飛ぶこと
-	<br>
-	③キーワードなしで、新たなショップ情報をネット上から集めること
-	<br>
-	→<%= link_to"スクレイピング開始", s3bases_path, method: :post %>（クリックすると30秒ほどでシステムが自動でネット上からBASEのショップ情報を集め、下記の表に追加します）
-</p>-->
+<br>
+<% if Rails.env.development? || Rails.env.test? %>
+	<%= link_to"トップページへ戻る",root_path%>
+<% end %>
+<br>
+<br>
+
 <%= link_to"スクレイピング開始", s3bases_path, method: :post %>（クリックすると1分ほどでシステムが自動でネット上からBASEのショップ情報を集め、下記の表に追加します）
 
-<%# <h1>【今後実装予定の機能・仕様】</h1>
-<p>
-	・下記の機能
-	<br>
-	・複数のショップのお問い合わせフォームにまとめて問い合わせを送れる機能
-	<br>
-	・ログイン機能
-	<br>
-	・サーバアップ
-</p> %>
-
-
-<h1>①ショップ情報収集機能</h1>
+<h2>①ショップ情報収集機能</h2>
 
 <%= form_tag s3bases_path,method: :post do%>
 	<%=text_field_tag :search,"",placeholder: "キーワードを入力" %>
@@ -38,7 +23,7 @@
 	(ex:「ファッション」で検索すると、システムが自動で「ファッション」関係のBASEのショップを一定数ネット上から集め、下記の表に追加します)
 </p>
 
-<h1>②システム内検索機能</h1>
+<h2>②システム内検索機能</h2>
 <p>
 	【機能説明】
 	<br>
@@ -49,30 +34,12 @@
 	下記の表は過去収集したBASEのショップ情報を全て表示する仕様になっています。
 </p>
 
-<%= form_tag search_s3bases_path,method: :get do%>
-	<%=text_field_tag :search,"",placeholder: "キーワードを入力" %>
-	<%= submit_tag "システム内を検索", name: nil %>
+<%= form_with url:s3bases_path ,method: :get,local: true do |f|%>
+	<%= f.text_field :search,placeholder: "キーワードを入力" %>
+	<%= f.submit "システム内を検索" %>
 <% end %>
 
-<!--<%= form_tag bulk_submission_s3bases_path,method: :post do %>
-	<%= text_field_tag :search,"",placeholder: "キーワードを入力" %>
-	<%= submit_tag "一括問い合わせ" , name: nil %>
-<% end %>-->
-
-<%# <h1>③エクセル出力機能</h1>
-<p>
-	【機能説明】
-	<br>
-	下記表のチェックボックスにチェックを付けたものをエクセルで出力する機能です（未実装）
-</p> %>
 <br>
-<% if Rails.env.development? || Rails.env.test? %>
-	<%= link_to"トップページへ戻る",root_path%>
-<% end %>
-<br>
-<br>
-<%# <p>test</p> %>
-
 <div class="container">
 	<% if @shop_datas%>
 		<input type="checkbox" id="check_all">
