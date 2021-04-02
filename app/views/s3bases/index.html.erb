@@ -56,20 +56,55 @@
 						<th>チェック</th>
 						<th>No.</th>
 						<th>ショップ名</th>
+						<th class="th_submit_status">問合せ</th>
+						<th>問合せ日時</th>
+						<th class="th_elapsed_days">経過日数</th>
 						<th>ショップ説明</th>
-						<th>問い合わせフォーム</th>
-						<th>ショップURL</th>
-						<th>問合せ</th>
-						<th>問い合わせ日時</th>
 					</tr>
-					<% @shop_datas.each do |data| %>
+					<% @shop_datas.each_with_index do |data,i| %>
 						<tr>
-							<td><%= f.check_box(:ids,{multiple: true},data.id,nil) %></td>
-							<td><%= data.id %></td>
-							<td class="td_shop_name"><%= data.shop_name %></td>
-							<td class="td_about_shop"><div class="cell-scroll"><%= data.about_shop %></div></td>
-							<td class="td_contact_url"><a href="<%= data.contact_url %>" target="_blank" rel=”noopener noreferrer”>フォームへ<%= data.contact_url %></a></td>
-							<td class="td_shop_url"><a href="<%= data.shop_url %>" target="_blank" rel=”noopener noreferrer”>サイトへ</a></td>
+							<td class="td_checkbox"> <%#チェック%>
+								<%= f.check_box(:ids,{multiple: true},data.id,nil) %>
+							</td>
+
+							<td class="td_shop_id"> <%#No.%>
+								<%= i+1 %>
+							</td>
+
+							<td class="td_shop_name"> <%#ショップ名%>
+								<a href="<%= data.shop_url %>" target="_blank" rel=”noopener noreferrer”>
+									<%= data.shop_name %>
+								</a>
+								<a href="<%= data.contact_url %>" target="_blank" rel=”noopener noreferrer”>
+									問い合わせフォーム
+								</a>
+							</td>
+
+							<td class="td_submit_status"> <%#問い合わせ状況%>
+								<% if data.submit_status == 0 %>
+									未
+								<% elsif data.submit_status == 1 %>
+									済
+								<% end %>
+							</td>
+
+							<td class="td_submit_at"> <%#問い合わせ日時%>
+								<% if data.submit_at.present? %>
+									<%= l data.submit_at, format: :short %>
+								<% end %>
+							</td>
+
+							<td class="td_elapsed_days"> <%#問い合わせ経過日数%>
+								<% if data.submit_at.present? %>
+									<%= ((DateTime.current.to_i - data.submit_at.to_i)/ 1.days).floor %>
+								<% end %>
+							</td>
+
+							<td class="td_about_shop"> <%#ショップ説明%>
+								<div class="cell-scroll">
+									<%= data.about_shop %>
+								</div>
+							</td>
 						</tr>
 					<% end %>
 					<%= f.submit "チェックしたショップに一括提案" %>

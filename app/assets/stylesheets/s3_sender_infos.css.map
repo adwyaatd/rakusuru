@@ -1,0 +1,9 @@
+{
+    "version": 3,
+    "mappings": "",
+    "sources": [
+        "s3_sender_infos.scss"
+    ],
+    "names": [],
+    "file": "s3_sender_infos.css"
+}

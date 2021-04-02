@@ -1,0 +1,31 @@
+.container {
+  width: 95%;
+  margin: 0 auto;
+}
+
+table {
+  width: 100%;
+}
+
+table .td_shop_name {
+  font-size: 11px;
+  width: 30%;
+}
+
+table .td_about_shop {
+  width: 50%;
+}
+
+table .td_contact_url {
+  width: 10px;
+}
+
+table .td_shop_url {
+  width: 7%;
+}
+
+table .cell-scroll {
+  font-size: 11px;
+  overflow-y: auto;
+}
+/*# sourceMappingURL=s3bases.css.map */

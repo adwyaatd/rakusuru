@@ -1,8 +1,11 @@
 class S3basesController < ApplicationController
 	def index
-		pp "params:#{params}"
 		if params[:search]
-			@shop_datas = S3base.where(["(about_shop LIKE ?) OR (shop_name LIKE ?)","%#{params[:search]}%","%#{params[:search]}%"])
+			@shop_datas = S3base.where(
+				["(about_shop LIKE ?) OR (shop_name LIKE ?)",
+					"%#{params[:search]}%",
+					"%#{params[:search]}%"]
+				)
 			if @shop_datas.empty?
 				flash[:notice] = "検索したキーワードに該当するショップはありませんでした"
 			end
@@ -92,7 +95,8 @@ class S3basesController < ApplicationController
 			s = S3base.find_by(id: r[:id])
 			logger.debug( "id:#{r.id}")
 			s.update(
-				submit_status: r[:submit_status]
+				submit_status: r[:submit_status],
+				submit_at: DateTime.current
 			)
 			logger.debug( "更新成功")
 		end
