@@ -39,11 +39,17 @@
 	<%= f.submit "システム内を検索" %>
 <% end %>
 
+<%= link_to "最後にスクレイピングしたショップを表示",s3bases_path(scraping_id: "last") %>
+<br>
+<%= link_to "未問い合わせのショップを表示",s3bases_path(submit_status: 0) %>
+<br>
+<%= link_to "問い合わせ済みのショップを表示",s3bases_path(submit_status: 1) %>
+<br>
+<%= link_to "全ショップ表示",s3bases_path(id: "all") %>
+<br>
 <br>
 <div class="container">
 	<% if @shop_datas%>
-		<input type="checkbox" id="check_all">
-		<label for="check_all">全チェック</label>
 			<%= form_with url: bulk_submission_s3bases_path	do |f| %>
 				<table border="1">
 					<tr>
@@ -53,6 +59,8 @@
 						<th>ショップ説明</th>
 						<th>問い合わせフォーム</th>
 						<th>ショップURL</th>
+						<th>問合せ</th>
+						<th>問い合わせ日時</th>
 					</tr>
 					<% @shop_datas.each do |data| %>
 						<tr>
@@ -60,13 +68,15 @@
 							<td><%= data.id %></td>
 							<td class="td_shop_name"><%= data.shop_name %></td>
 							<td class="td_about_shop"><div class="cell-scroll"><%= data.about_shop %></div></td>
-							<td class="td_contact_url"><a href="<%= data.contact_url %>" target="_blank" rel=”noopener noreferrer”><%= data.contact_url %></a></td>
+							<td class="td_contact_url"><a href="<%= data.contact_url %>" target="_blank" rel=”noopener noreferrer”>フォームへ<%= data.contact_url %></a></td>
 							<td class="td_shop_url"><a href="<%= data.shop_url %>" target="_blank" rel=”noopener noreferrer”>サイトへ</a></td>
 						</tr>
 					<% end %>
+					<%= f.submit "チェックしたショップに一括提案" %>
+					<br>
+					<input type="checkbox" id="check_all">
+					<label for="check_all">全チェック</label>
 				</table>
-				<br>
-				<%= f.submit "問い合わせ" %>
 			<% end %>
 	<% end %>
 </div>

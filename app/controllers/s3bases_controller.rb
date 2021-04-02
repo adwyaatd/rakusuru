@@ -1,12 +1,33 @@
 class S3basesController < ApplicationController
 	def index
+		pp "params:#{params}"
 		if params[:search]
 			@shop_datas = S3base.where(["(about_shop LIKE ?) OR (shop_name LIKE ?)","%#{params[:search]}%","%#{params[:search]}%"])
 			if @shop_datas.empty?
 				flash[:notice] = "検索したキーワードに該当するショップはありませんでした"
 			end
+		elsif params[:id] == "all"
+			@shop_datas = S3base.where(disable: 0)
+		elsif params[:scraping_id] == "last"
+			@shop_datas = S3base.where(
+				scraping_id: S3base.maximum(:scraping_id),
+				disable: 0
+			)
+		elsif params[:submit_status] == "0"
+			@shop_datas = S3base.where(
+				submit_status: 0,
+				disable: 0
+			)
+		elsif params[:submit_status] == "1"
+			@shop_datas = S3base.where(
+				submit_status: 1,
+				disable: 0
+			)
 		else
-			@shop_datas = S3base.where(scraping_id: S3base.maximum(:scraping_id))
+			@shop_datas = S3base.where(
+				scraping_id: S3base.maximum(:scraping_id),
+				disable: 0
+			)
 		end
   end
 
