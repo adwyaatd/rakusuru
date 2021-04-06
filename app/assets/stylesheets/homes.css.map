@@ -1,9 +1,0 @@
-{
-    "version": 3,
-    "mappings": ";AAKA,iDAAiD;AACjD,AAAA,MAAM,CAAC;EACL,WAAW,EAAE,GAAG;EAChB,OAAO,EAAE,KAAK;EACd,KAAK,EAAE,KAAK;EACZ,UAAU,EAAE,OAAO;EACnB,UAAU,EAAE,MAAM;EAClB,QAAQ,EAAE,QAAQ;EAClB,QAAQ,EAAE,KAAK;EACf,GAAG,EAAE,GAAG;EACR,OAAO,EAAE,EAAE;EACX,KAAK,EAAE,GAAG;EACV,SAAS,EAAE,IAAI;CAChB",
-    "sources": [
-        "homes.scss"
-    ],
-    "names": [],
-    "file": "homes.css"
-}

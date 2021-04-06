@@ -96,7 +96,7 @@
 
 							<td class="td_elapsed_days"> <%#問い合わせ経過日数%>
 								<% if data.submit_at.present? %>
-									<%= ((DateTime.current.to_i - data.submit_at.to_i)/ 1.days).floor %>
+									<%= ((DateTime.current.to_i - data.submit_at.to_i)/ 1.days).floor %>日
 								<% end %>
 							</td>
 

@@ -1,21 +1,11 @@
 require "logger"
 require "pp"
 require "selenium-webdriver"
+require "parallel"
 
 class Core
 
 	def initialize
-	end
-
-	def check_element(d,attri,val)
-		wait = Selenium::WebDriver::Wait.new(:timeout => 1)
-		ret = true
-		begin
-			wait.until{ d.find_element(attri,val) }
-		rescue
-			ret = false
-		end
-		return ret
 	end
 
 	def get_driver
@@ -34,11 +24,42 @@ class Core
 
 			return d
 		rescue => e
-			Rails.logger.error("----------------------[error]file:#{$0},line:#{__LINE__},error:#{e}-------------------")
+			Rails.logger.error("----------------------[error]line:#{__LINE__},error:#{e.message},#{e.backtrace.join("\n")} ---------------------------")
 			sleep(1)
 			retry_cnt += 1
 			Rails.logger.debug(retry_cnt)
-			retry if retry_cnt <= 2
+			retry if retry_cnt <= 1
 		end
 	end
+
+	def check_element(d,attri,val,text="")
+		wait = Selenium::WebDriver::Wait.new(:timeout => 2)
+
+		ret = true
+		begin
+			element = wait.until{ d.find_element(attri,val) }
+		rescue
+			ret = false
+		else
+			if !element.text.include?(text)
+				ret = false
+			end
+		end
+		return ret
+	end
+
+	def check_base(d)
+		ret = true
+		begin
+			element = d.find_element(:name,"copyright").attribute("content")
+		rescue
+			ret = false
+		else
+			if !element.include?("BASE")
+				ret = false
+			end
+		end
+		return ret
+	end
+
 end

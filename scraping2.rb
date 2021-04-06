@@ -23,7 +23,7 @@ datas = []
 		pp "ページへ"
 		d.navigate.to 'https://furusato.ana.co.jp/products/ranking.php'
   rescue => e
-    # logger.error("----------------------[error]file:#{$0},line:#{__LINE__},error:#{e}-------------------")
+    # logger.error("----------------------[error]line:#{__LINE__},error:#{e.message},#{e.backtrace.join("\n")} ---------------------------")
     sleep(1)
     retry_cnt += 1
     # logger.debug(retry_cnt)
@@ -98,7 +98,7 @@ datas = []
   return datas
 # rescue => e
 #   logger.debug("エラー発生")
-#   logger.error("----------------------[error]file:#{$0},line:#{__LINE__},error:#{e}---------------------------")
+#   logger.error("----------------------[error]line:#{__LINE__},error:#{e.message},#{e.backtrace.join("\n")} ---------------------------")
 #   d.quit
 #   return datas
 # end
