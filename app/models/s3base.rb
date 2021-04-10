@@ -13,9 +13,7 @@ class S3base < ApplicationRecord
 
 			# logger.debug("入力した内容を検索バーに入力して検索")
 			search_bar = d.find_element(:name,"q")
-			# search_bar.send_key("site:*.thebase.in #{search_word}", :enter)
-			search_bar.send_key("site:*base.shop #{search_word}", :enter)
-			# search_bar.send_key("site:*.theshop.jp #{search_word}", :enter)
+			search_bar.send_key("site:*.thebase.in #{search_word}", :enter)
 
 			top_url = d.current_url
 
