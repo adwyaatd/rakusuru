@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
 
-  get 's4tunos/index'
+  get 's3_sender_infos/index'
+  # get 's3_sender_info/index'
+  # get 's4tunos/index'
 	root 'homes#top'
 	get '/' => 'homes#top'
 
@@ -20,7 +22,12 @@ Rails.application.routes.draw do
 	resources :s3bases do
 		collection do
 			get "search"
+			post "invoke_lambda"
+			post "bulk_submission"
 		end
+	end
+
+	resources :s3_sender_infos do
 	end
 
 	resources :s4tunos do

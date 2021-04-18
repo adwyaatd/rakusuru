@@ -1,0 +1,15 @@
+current directory: /Users/hosodaraimu/myapp/rakusuru/vendor/bundle/ruby/2.6.0/gems/debug_inspector-0.0.3/ext/debug_inspector
+/Users/hosodaraimu/.rbenv/versions/2.6.3/bin/ruby -I /Users/hosodaraimu/.rbenv/versions/2.6.3/lib/ruby/2.6.0 -r ./siteconf20210410-53166-wsftu5.rb extconf.rb
+creating Makefile
+
+current directory: /Users/hosodaraimu/myapp/rakusuru/vendor/bundle/ruby/2.6.0/gems/debug_inspector-0.0.3/ext/debug_inspector
+make "DESTDIR=" clean
+
+current directory: /Users/hosodaraimu/myapp/rakusuru/vendor/bundle/ruby/2.6.0/gems/debug_inspector-0.0.3/ext/debug_inspector
+make "DESTDIR="
+compiling debug_inspector.c
+linking shared-object debug_inspector.bundle
+
+current directory: /Users/hosodaraimu/myapp/rakusuru/vendor/bundle/ruby/2.6.0/gems/debug_inspector-0.0.3/ext/debug_inspector
+make "DESTDIR=" install
+/usr/bin/install -c -m 0755 debug_inspector.bundle ./.gem.20210410-53166-wqa9m1

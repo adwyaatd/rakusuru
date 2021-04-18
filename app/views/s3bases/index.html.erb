@@ -1,34 +1,19 @@
 <h1>【テスト版】BASEのショップ情報収集システム</h1>
 
-<!--<h1>【テスト版でできること】</h1>
-<p>
-	①収集済みのショップ一覧情報（下記の表）の確認
-	<br>
-	②ショップごとのお問い合わせフォーム、サイトリンクへ飛ぶこと
-	<br>
-	③キーワードなしで、新たなショップ情報をネット上から集めること
-	<br>
-	→<%= link_to"スクレイピング開始", s3bases_path, method: :post %>（クリックすると30秒ほどでシステムが自動でネット上からBASEのショップ情報を集め、下記の表に追加します）
-</p>-->
-<%= link_to"スクレイピング開始", s3bases_path, method: :post %>（クリックすると1分ほどでシステムが自動でネット上からBASEのショップ情報を集め、下記の表に追加します）
+<br>
+<% if Rails.env.development? || Rails.env.test? %>
+	<%= link_to"トップページへ戻る",root_path%>
+<% end %>
+<br>
+<br>
 
-<%# <h1>【今後実装予定の機能・仕様】</h1>
-<p>
-	・下記の機能
-	<br>
-	・複数のショップのお問い合わせフォームにまとめて問い合わせを送れる機能
-	<br>
-	・ログイン機能
-	<br>
-	・サーバアップ
-</p> %>
+<%= link_to"スクレイピング開始", invoke_lambda_s3bases_path, method: :post %>（クリックすると1分ほどでシステムが自動でネット上からBASEのショップ情報を集め、下記の表に追加します）
 
+<h2>①ショップ情報収集機能</h2>
 
-<h1>①ショップ情報収集機能</h1>
-
-<%= form_tag s3bases_path,method: :post do%>
-	<%=text_field_tag :search,"",placeholder: "キーワードを入力" %>
-	<%= submit_tag "ショップ情報を収集", name: nil %>
+<%= form_with url:invoke_lambda_s3bases_path,method: :post do |f| %>
+	<%= f.text_field :search_word,placeholder: "キーワードを入力" %>
+	<%= f.submit "ショップ情報を収集", name: nil %>
 <% end %>
 <p>
 	【機能説明】
@@ -38,7 +23,7 @@
 	(ex:「ファッション」で検索すると、システムが自動で「ファッション」関係のBASEのショップを一定数ネット上から集め、下記の表に追加します)
 </p>
 
-<h1>②システム内検索機能</h1>
+<h2>②システム内検索機能</h2>
 <p>
 	【機能説明】
 	<br>
@@ -49,52 +34,87 @@
 	下記の表は過去収集したBASEのショップ情報を全て表示する仕様になっています。
 </p>
 
-<%= form_tag search_s3bases_path,method: :get do%>
-	<%=text_field_tag :search,"",placeholder: "キーワードを入力" %>
-	<%= submit_tag "システム内を検索", name: nil %>
+<%= form_with url:s3bases_path ,method: :get,local: true do |f|%>
+	<%= f.text_field :search,placeholder: "キーワードを入力" %>
+	<%= f.submit "システム内を検索" %>
 <% end %>
 
-<%# <h1>③エクセル出力機能</h1>
-<p>
-	【機能説明】
-	<br>
-	下記表のチェックボックスにチェックを付けたものをエクセルで出力する機能です（未実装）
-</p> %>
+<%= link_to "最後にスクレイピングしたショップを表示",s3bases_path(scraping_id: "last") %>
 <br>
-<% if Rails.env.development? || Rails.env.test? %>
-	<%= link_to"トップページへ戻る",root_path%>
-<% end %>
+<%= link_to "未問い合わせのショップを表示",s3bases_path(submit_status: 0) %>
+<br>
+<%= link_to "問い合わせ済みのショップを表示",s3bases_path(submit_status: 1) %>
+<br>
+<%= link_to "全ショップ表示",s3bases_path(id: "all") %>
 <br>
 <br>
-
 <div class="container">
 	<% if @shop_datas%>
-			<table border="1">
-				<%# <colgroup span="2"></colgroup>
-				<colgroup span="1" class="colgroup_shop_name"></colgroup>
-				<colgroup span="1" class="colgroup_about_shop"></colgroup>
-				<colgroup span="1" class="colgroup_contact_url"></colgroup>
-				<colgroup span="1" class="colgroup_shop_url"></colgroup> %>
+			<%= form_with url: bulk_submission_s3bases_path	do |f| %>
+				<table border="1">
 					<tr>
-						<th><%= label_tag :test1, "チェック" %></th>
+						<th>チェック</th>
 						<th>No.</th>
 						<th>ショップ名</th>
+						<th class="th_submit_status">問合せ</th>
+						<th>問合せ日時</th>
+						<th class="th_elapsed_days">経過日数</th>
 						<th>ショップ説明</th>
-						<th>問い合わせフォーム</th>
-						<th>ショップURL</th>
 					</tr>
 					<% @shop_datas.each_with_index do |data,i| %>
-					<tr>
-							<td><%= check_box_tag :test1 %></td>
-							<td><%= i+1 %></td>
-							<td class="td_shop_name"><%= data.shop_name %></td>
-							<td class="td_about_shop"><div class="cell-scroll"><%= data.about_shop %></div></td>
-							<td class="td_contact_url"><a href="<%= data.contact_url %>" target="_blank" rel=”noopener noreferrer”><%= data.contact_url %></a></td>
-							<td class="td_shop_url"><a href="<%= data.shop_url %>" target="_blank" rel=”noopener noreferrer”>サイトへ</a></td>
-					</tr>
+						<tr>
+							<td class="td_checkbox"> <%#チェック%>
+								<%= f.check_box(:ids,{multiple: true},data.id,nil) %>
+							</td>
+
+							<td class="td_shop_id"> <%#No.%>
+								<%= i+1 %>
+							</td>
+
+							<td class="td_shop_name"> <%#ショップ名%>
+								<a href="<%= data.shop_url %>" target="_blank" rel=”noopener noreferrer”>
+									<%= data.shop_name %>
+								</a>
+								<a href="<%= data.contact_url %>" target="_blank" rel=”noopener noreferrer”>
+									問い合わせフォーム
+								</a>
+							</td>
+
+							<td class="td_submit_status"> <%#問い合わせ状況%>
+								<% if data.submit_status == 0 %>
+									未
+								<% elsif data.submit_status == 1 %>
+									済
+								<% end %>
+							</td>
+
+							<td class="td_submit_at"> <%#問い合わせ日時%>
+								<% if data.submit_at.present? %>
+									<%= l data.submit_at, format: :short %>
+								<% end %>
+							</td>
+
+							<td class="td_elapsed_days"> <%#問い合わせ経過日数%>
+								<% if data.submit_at.present? %>
+									<%= ((DateTime.current.to_i - data.submit_at.to_i)/ 1.days).floor %>日
+								<% end %>
+							</td>
+
+							<td class="td_about_shop"> <%#ショップ説明%>
+								<div class="cell-scroll">
+									<%= data.about_shop %>
+								</div>
+							</td>
+						</tr>
 					<% end %>
-			</table>
+					<%= f.submit "チェックしたショップに一括提案" %>
+					<br>
+					<input type="checkbox" id="check_all">
+					<label for="check_all">全チェック</label>
+				</table>
+			<% end %>
 	<% end %>
 </div>
 <br>
-<!--ー<%= link_to"トップへ戻る",root_path%>-->
+
+<%= javascript_pack_tag 's3base' %>

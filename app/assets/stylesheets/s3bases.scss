@@ -9,27 +9,33 @@
 
 table{
 	width: 100%;
+	font-size: 13px;
+	.th_submit_status{
+		white-space: nowrap;
+	}
+	.th_elapsed_days{
+		white-space: nowrap;
+	}
+	.td_checkbox{
+		text-align: center;
+	}
+	.td_shop_id{
+		text-align: center;
+	}
 	.td_shop_name{
 		width: 30%;
 	}
+	.td_submit_status{
+		text-align: center;
+	}
+	.td_elapsed_days{
+		text-align: center;
+	}
 	.td_about_shop{
-		width: 50%;
-		// height: 100%;
-		// background-color: rgb(146, 137, 137);
+		width: 30%;
 	}
-	.td_contact_url{
-		// width: 10px;
-		// white-space: nowrap;
-		// background-color: rgb(146, 137, 137);
-	}
-	.td_shop_url{
-		width: 7%;
-	}
-
 	.cell-scroll{
 		font-size: 11px;
-		// white-space: nowrap;
 		overflow-y: auto;
-		height: 60px;
 	}
 }
