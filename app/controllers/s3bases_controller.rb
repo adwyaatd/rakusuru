@@ -99,6 +99,22 @@ class S3basesController < ApplicationController
 		redirect_to s3bases_url
 	end
 
+	def invoke_lambda
+		scraping_id = (S3base.maximum(:scraping_id)+1).to_s
+		site_domains = ["thebase.in","base.shop","base.ec","theshop.jp","buyshop.jp"]
+		begin
+			site_domains.each_with_index do |site_domain,i|
+				Sqs.send_message(params[:search_word],site_domain,scraping_id,i)
+			end
+		rescue => e
+			logger.error("----------------------[error]line:#{__LINE__},error:#{e.message},#{e.backtrace.join("\n")} ---------------------------")
+			flash[:notice] = "キュー送信失敗"
+		else
+			flash[:notice] = "キュー送信成功!"
+		end
+		redirect_to s3bases_url
+	end
+
 	def bulk_submission
 		@shops = S3base.where(id:params[:ids])
 		@sender_info = S3SenderInfo.last

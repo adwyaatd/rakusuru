@@ -20,7 +20,13 @@ class S3base < ApplicationRecord
 			# グーグルの検索結果nページ目まで処理を繰り返す
 			while page <= 1
 				# 各ショップサイトのURLを取得
-				elements = d.find_elements(:xpath,"id('rso')/div/div/div/div[1]/a")
+				# elements = d.find_elements(:xpath,"id('rso')/div/div/div/div/div[1]/a")
+				elements = d.find_elements(:xpath,"//div[@class='yuRUbf']/a")
+				if elements.empty?
+					logger.debug("サイトURLのPath変更の可能性あり")
+					d.quit
+					return datas
+				end
 				urls = elements.map{|element| element.attribute("href")}
 
 				urls.each do |url|

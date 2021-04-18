@@ -7,13 +7,13 @@
 <br>
 <br>
 
-<%= link_to"スクレイピング開始", s3bases_path, method: :post %>（クリックすると1分ほどでシステムが自動でネット上からBASEのショップ情報を集め、下記の表に追加します）
+<%= link_to"スクレイピング開始", invoke_lambda_s3bases_path, method: :post %>（クリックすると1分ほどでシステムが自動でネット上からBASEのショップ情報を集め、下記の表に追加します）
 
 <h2>①ショップ情報収集機能</h2>
 
-<%= form_tag s3bases_path,method: :post do%>
-	<%=text_field_tag :search,"",placeholder: "キーワードを入力" %>
-	<%= submit_tag "ショップ情報を収集", name: nil %>
+<%= form_with url:invoke_lambda_s3bases_path,method: :post do |f| %>
+	<%= f.text_field :search_word,placeholder: "キーワードを入力" %>
+	<%= f.submit "ショップ情報を収集", name: nil %>
 <% end %>
 <p>
 	【機能説明】
