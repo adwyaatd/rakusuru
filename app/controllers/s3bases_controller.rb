@@ -108,9 +108,9 @@ class S3basesController < ApplicationController
 			end
 		rescue => e
 			logger.error("----------------------[error]line:#{__LINE__},error:#{e.message},#{e.backtrace.join("\n")} ---------------------------")
-			flash[:notice] = "キュー送信失敗"
+			flash[:notice] = "システムエラーです"
 		else
-			flash[:notice] = "キュー送信成功!"
+			flash[:notice] = "スクレイピング実行中です。少々お待ち下さい。"
 		end
 		redirect_to s3bases_url
 	end
