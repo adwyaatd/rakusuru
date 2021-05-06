@@ -99,12 +99,14 @@ class S3basesController < ApplicationController
 		redirect_to s3bases_url
 	end
 
-	def invoke_lambda
+	def invoke_base_scraping_lambda
 		scraping_id = (S3base.maximum(:scraping_id)+1).to_s
 		site_domains = ["thebase.in","base.shop","base.ec","theshop.jp","buyshop.jp"]
+		queue_name = "scr-queue.fifo"
 		begin
 			site_domains.each_with_index do |site_domain,i|
-				Sqs.send_message(params[:search_word],site_domain,scraping_id,i)
+				sqs_message_json = {search_word: "#{params[:search_word]}",domain: "#{site_domain}",scraping_id: "#{scraping_id}"}.to_json
+				Sqs.send_message(queue_name,sqs_message_json,i)
 			end
 		rescue => e
 			logger.error("----------------------[error]line:#{__LINE__},error:#{e.message},#{e.backtrace.join("\n")} ---------------------------")
@@ -115,13 +117,63 @@ class S3basesController < ApplicationController
 		redirect_to s3bases_url
 	end
 
+	def invoke_bulk_submission_lambda
+		shops_info_array = []
+		queue_name = "scr-queue.fifo"
+
+		pluck_columns1 = [:id,:shop_name, :contact_url,:submit_status]
+		S3base.where("(id = ?) AND (submit_status = ?)",params[:ids],0).pluck(*pluck_columns1).map do |b|
+			one_shop_info_hash = pluck_columns1.zip(b).to_h
+			shops_info_array.push(one_shop_info_hash)
+		end
+
+		pp shops_info_array
+
+		shops_info_array.each do |s|
+			pp s[:id]
+			pp "shop_name:#{s[:shop_name]}"
+			pp "contact_url:#{s[:contact_url]}"
+			pp s[:submit_status]
+		end
+
+		if shops_info_array.empty?
+			flash[:notice] = "未問い合わせのショップがありません"
+			redirect_to s3bases_url
+			return
+		end
+
+		max_id = S3SenderInfo.maximum(:id).to_s
+		pluck_columns2 = [:sender_name,:tel,:email,:title,:content]
+		sender_info_array = S3SenderInfo.where("(id = ?) AND (disable = ?)", max_id,0).pluck(*pluck_columns2)
+			# [["細田 来夢","09035380252","adwyaatd0601@gmail.com","ご提案","お世話になります。\r\n" + "株式会社HRの細田と申します。\r\n" + "\r\n" + "以下、本文"]]
+		sender_info_hash = pluck_columns2.zip(sender_info_array[0]).to_h
+			#{:sender_name=>"細田 来夢",:tel=>"09035380252",:email=>"adwyaatd0601@gmail.com",:title=>"ご提案",:content=>"お世話になります。\r\n" + "株式会社HRの細田と申します。\r\n" + "\r\n" + "以下、本文"}
+
+		sqs_message_json = {shops_info_array: shops_info_array,sender_info_hash: sender_info_hash}.to_json
+			#jsonの内容は"/storage/bulk_submission_sqs_example.rb"参照
+		queue_name = "bulk_submission.fifo"
+
+		begin
+			if Rails.env.development? || Rails.env.test?
+				# Sqs.send_message(queue_name,sqs_message_json) #ローカル環境では原則submitをしない
+			else
+				Sqs.send_message(queue_name,sqs_message_json)
+			end
+			pp "Success! send_message to SQS"
+		rescue => e
+			logger.error("----------------------[error]line:#{__LINE__},error:#{e.message},#{e.backtrace.join("\n")} ---------------------------")
+			flash[:notice] = "システムエラーです"
+		else
+			flash[:notice] = "一括問い合わせ実行中です。少々お待ち下さい。"
+		end
+
+		redirect_to s3bases_url
+	end
+
 	def bulk_submission
-		@shops = S3base.where(id:params[:ids])
+		@shops = S3base.where(shop_name:params[:shop_name])
 		@sender_info = S3SenderInfo.last
 
-		@shops.each do |s|
-			pp "shop_name:#{s.shop_name}"
-		end
 		result = S3base.bulk_submission(@sender_info,@shops)
 		result.each do |r|
 			logger.debug( "#{r[:shop_name]}:データ更新")
@@ -133,6 +185,7 @@ class S3basesController < ApplicationController
 			)
 			logger.debug( "更新成功")
 		end
+		flash[:notice] = "問い合わせ完了しました"
 		redirect_to s3bases_url
 	end
 

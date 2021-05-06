@@ -114,7 +114,8 @@ class S3base < ApplicationRecord
 		wait = Selenium::WebDriver::Wait.new(:timeout => 5)
 
     begin
-      d = core.get_driver
+      # d = core.get_driver
+			d = Selenium::WebDriver.for :chrome
 
       shops.each_with_index do |shop, i|
         # logger.debug("問い合わせURLにアクセス")
@@ -152,22 +153,23 @@ class S3base < ApplicationRecord
 
 				d.find_element(:id,"buttonLeave").click
 
+				# 問い合わせ内容確認ページへ
         unless core.check_element(d,:id, "inquiryConfirmSection")
           logger.debug("確認ページ以外に入った")
           next
         end
 
-        # d.find_element(:id,"buttonLeave").click
-        if core.check_element(d,:id,"buttonLeave")
+				# 「送信する」をクリック
+        d.find_element(:id,"buttonLeave").click
+
+				# 送信完了ページへ
+        if core.check_element(d,:id,"inquiryCompleteSection")
 					logger.debug("成功！")
-					# shop.submit_status = 1
+					shop.submit_status = 1
+				else
+          logger.debug("完了ページ以外に入った")
+          next
         end
-
-        # unless core.check_element(d,:id, "inquiryCompleteSection")
-        #   # logger.debug("完了ページ以外に入った")
-        #   next
-        # end
-
 
         logger.debug("問い合わせ操作#{i+1}完了")
       end

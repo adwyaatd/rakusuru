@@ -22,8 +22,9 @@ Rails.application.routes.draw do
 	resources :s3bases do
 		collection do
 			get "search"
-			post "invoke_lambda"
+			post "invoke_base_scraping_lambda"
 			post "bulk_submission"
+			post "invoke_bulk_submission_lambda"
 		end
 	end
 

@@ -1,4 +1,4 @@
-<h1>【テスト版】BASEのショップ情報収集システム</h1>
+<h1>Contact Form Bulk Submission（from BASE）</h1>
 
 <br>
 <% if Rails.env.development? || Rails.env.test? %>
@@ -7,31 +7,32 @@
 <br>
 <br>
 
-<%= link_to"スクレイピング開始", invoke_lambda_s3bases_path, method: :post %>（クリックすると1分ほどでシステムが自動でネット上からBASEのショップ情報を集め、下記の表に追加します）
 
-<h2>①ショップ情報収集機能</h2>
-
-<%= form_with url:invoke_lambda_s3bases_path,method: :post do |f| %>
+<h2>【ショップ情報収集機能】</h2>
+<p>
+	①キーワードを指定せずショップ情報を集める
+	<br>
+	　：システムがネット上からBASEの人気ショップの情報を自動で集め、下記の表に追加します。クリック後、10分ほど待ってください。
+</p>
+　<%= link_to"ショップ情報を収集(キーワードなし)", invoke_base_scraping_lambda_s3bases_path, method: :post %>
+<br>
+<p>
+	②キーワードを指定してショップ情報を集める
+	<br>
+	　：キーワードでショップ情報を収集・下記の表に追加する機能です。
+	<br>
+	　(ex:「ファッション」で検索すると、システムが自動で「ファッション」関係のBASEのショップを一定数ネット上から集め、下記の表に追加します)
+</p>
+<%= form_with url:invoke_base_scraping_lambda_s3bases_path,method: :post do |f| %>
 	<%= f.text_field :search_word,placeholder: "キーワードを入力" %>
 	<%= f.submit "ショップ情報を収集", name: nil %>
 <% end %>
-<p>
-	【機能説明】
-	<br>
-	キーワードでショップ情報を収集・下記の表に追加する機能です（実装済み）
-	<br>
-	(ex:「ファッション」で検索すると、システムが自動で「ファッション」関係のBASEのショップを一定数ネット上から集め、下記の表に追加します)
-</p>
 
-<h2>②システム内検索機能</h2>
+<h2>【システム内検索機能】</h2>
 <p>
-	【機能説明】
+	データベースからキーワードに該当するショップを表示する機能です
 	<br>
-	システムDBからキーワードに該当するショップ情報を収集する機能です
-	<br>
-	(ex:「ファッション」で検索すると、下記の表の中で「ファッション」の単語を含むのBASEのショップ情報を表示する)
-	<br>
-	下記の表は過去収集したBASEのショップ情報を全て表示する仕様になっています。
+	(ex:「ファッション」で検索すると、下記の表の中で「ファッション」の単語を含むショップを表示する)
 </p>
 
 <%= form_with url:s3bases_path ,method: :get,local: true do |f|%>
@@ -39,7 +40,7 @@
 	<%= f.submit "システム内を検索" %>
 <% end %>
 
-<%= link_to "最後にスクレイピングしたショップを表示",s3bases_path(scraping_id: "last") %>
+<%= link_to "最新で取得したショップを表示",s3bases_path(scraping_id: "last") %>
 <br>
 <%= link_to "未問い合わせのショップを表示",s3bases_path(submit_status: 0) %>
 <br>
@@ -49,8 +50,9 @@
 <br>
 <br>
 <div class="container">
+	<%= link_to "テスト",bulk_submission_s3bases_path(shop_name: "rhosoda"), method: :post %>
 	<% if @shop_datas%>
-			<%= form_with url: bulk_submission_s3bases_path	do |f| %>
+			<%= form_with url: invoke_bulk_submission_lambda_s3bases_path	do |f| %>
 				<table border="1">
 					<tr>
 						<th>チェック</th>
