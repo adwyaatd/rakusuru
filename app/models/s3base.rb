@@ -157,6 +157,8 @@ class S3base < ApplicationRecord
         unless core.check_element(d,:id, "inquiryConfirmSection")
           logger.debug("確認ページ以外に入った")
           next
+				else
+					logger.debug("確認ページに入った")
         end
 
 				# 「送信する」をクリック

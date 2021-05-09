@@ -29,6 +29,9 @@ Rails.application.routes.draw do
 	end
 
 	resources :s3_sender_infos do
+		collection do
+			post "activate"
+		end
 	end
 
 	resources :s4tunos do

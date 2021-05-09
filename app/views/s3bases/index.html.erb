@@ -1,56 +1,79 @@
 <h1>Contact Form Bulk Submission（from BASE）</h1>
-
-<br>
 <% if Rails.env.development? || Rails.env.test? %>
 	<%= link_to"トップページへ戻る",root_path%>
 <% end %>
 <br>
-<br>
-
-
-<h2>【ショップ情報収集機能】</h2>
-<p>
-	①キーワードを指定せずショップ情報を集める
-	<br>
-	　：システムがネット上からBASEの人気ショップの情報を自動で集め、下記の表に追加します。クリック後、10分ほど待ってください。
-</p>
-　<%= link_to"ショップ情報を収集(キーワードなし)", invoke_base_scraping_lambda_s3bases_path, method: :post %>
-<br>
-<p>
-	②キーワードを指定してショップ情報を集める
-	<br>
-	　：キーワードでショップ情報を収集・下記の表に追加する機能です。
-	<br>
-	　(ex:「ファッション」で検索すると、システムが自動で「ファッション」関係のBASEのショップを一定数ネット上から集め、下記の表に追加します)
-</p>
-<%= form_with url:invoke_base_scraping_lambda_s3bases_path,method: :post do |f| %>
-	<%= f.text_field :search_word,placeholder: "キーワードを入力" %>
-	<%= f.submit "ショップ情報を収集", name: nil %>
-<% end %>
-
-<h2>【システム内検索機能】</h2>
-<p>
-	データベースからキーワードに該当するショップを表示する機能です
-	<br>
-	(ex:「ファッション」で検索すると、下記の表の中で「ファッション」の単語を含むショップを表示する)
-</p>
-
-<%= form_with url:s3bases_path ,method: :get,local: true do |f|%>
-	<%= f.text_field :search,placeholder: "キーワードを入力" %>
-	<%= f.submit "システム内を検索" %>
-<% end %>
-
-<%= link_to "最新で取得したショップを表示",s3bases_path(scraping_id: "last") %>
-<br>
-<%= link_to "未問い合わせのショップを表示",s3bases_path(submit_status: 0) %>
-<br>
-<%= link_to "問い合わせ済みのショップを表示",s3bases_path(submit_status: 1) %>
-<br>
-<%= link_to "全ショップ表示",s3bases_path(id: "all") %>
-<br>
-<br>
 <div class="container">
+	<h3>【ショップ情報収集機能】</h3>
+	<p>
+		①キーワードを指定せずショップ情報を集める
+		<br>
+		　：システムがネット上からBASEの人気ショップの情報を自動で集め、下記の表に追加します。クリック後、10分ほど待ってください。
+	</p>
+	　<%= link_to"ショップ情報を収集(キーワードなし)", invoke_base_scraping_lambda_s3bases_path, method: :post %>
+	<br>
+	<p>
+		②キーワードを指定してショップ情報を集める
+		<br>
+		　：キーワードでショップ情報を収集・下記の表に追加する機能です。
+		<br>
+		　(ex:「ファッション」で検索すると、システムが自動で「ファッション」関係のBASEのショップを一定数ネット上から集め、下記の表に追加します)
+	</p>
+	<%= form_with url:invoke_base_scraping_lambda_s3bases_path,method: :post do |f| %>
+		<%= f.text_field :search_word,placeholder: "キーワードを入力" %>
+		<%= f.submit "ショップ情報を収集", name: nil %>
+	<% end %>
+</div>
+
+<div class="container">
+	<h3>【一括問い合わせ機能】</h3>
+	<p>
+		下記ショップ一覧から選択したショップへ、以下のテンプレート内容で一括で問い合わせを行います。
+	</p>
+
+	<% if @active_sender_info %>
+		<p>【問い合わせテンプレート】　<%= link_to "テンプレートを作成・変更",s3_sender_infos_index_path %></p>
+		<table border="1">
+			<tr>
+				<th>名前</th>
+				<th>tel</th>
+				<th>メールアドレス</th>
+				<th>件名</th>
+				<th>問い合わせ内容</th>
+			</tr>
+			<% @active_sender_info.each do |info| %>
+			<tr>
+				<td class="th_submit_status"><%= info.sender_name %></td>
+				<td class="th_submit_status"><%= info.tel %></td>
+				<td class="th_submit_status"><%= info.email %></td>
+				<td class="th_submit_status"><%= info.title %></td>
+				<td class="th_submit_status"><div class="cell-scroll"><%= info.content %></div></td>
+			</tr>
+				<% end %>
+		</table>
+	<% end %>
+	<br>
+
+	<p>【ショップを検索】</p>
+	<%= form_with url:s3bases_path ,method: :get,local: true do |f|%>
+		<%= f.text_field :search,placeholder: "キーワードを入力" %>
+		<%= f.submit "システム内を検索" %>
+	<% end %>
+
+	<%= link_to "最新で取得したショップを表示",s3bases_path(scraping_id: "last") %>
+	<br>
+	<%= link_to "未問い合わせのショップを表示",s3bases_path(submit_status: 0) %>
+	<br>
+	<%= link_to "問い合わせ済みのショップを表示",s3bases_path(submit_status: 1) %>
+	<br>
+	<%= link_to "全ショップ表示",s3bases_path(id: "all") %>
+</div>
+<br>
+
+<div class="container">
+
 	<%= link_to "テスト",bulk_submission_s3bases_path(shop_name: "rhosoda"), method: :post %>
+
 	<% if @shop_datas%>
 			<%= form_with url: invoke_bulk_submission_lambda_s3bases_path	do |f| %>
 				<table border="1">
@@ -109,7 +132,7 @@
 							</td>
 						</tr>
 					<% end %>
-					<%= f.submit "チェックしたショップに一括提案" %>
+					<%= f.submit "チェックしたショップに一括問い合わせ" %>
 					<br>
 					<input type="checkbox" id="check_all">
 					<label for="check_all">全チェック</label>

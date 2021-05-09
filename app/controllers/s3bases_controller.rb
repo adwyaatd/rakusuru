@@ -31,6 +31,11 @@ class S3basesController < ApplicationController
 				disable: 0
 			)
 		end
+
+		@active_sender_info = S3SenderInfo.where(
+			disable:0,
+			is_active:1
+		)
   end
 
 	def create
