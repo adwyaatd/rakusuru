@@ -40,8 +40,6 @@ class S3SenderInfosController < ApplicationController
 	end
 
 	def activate
-		pp "入った！！！！！！！！！！！！"
-		pp params
 		activated_sender_info = S3SenderInfo.find_by(is_active: 1)
 		activated_sender_info.update(
 			is_active: 0

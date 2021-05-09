@@ -32,7 +32,7 @@ class S3basesController < ApplicationController
 			)
 		end
 
-		@active_sender_info = S3SenderInfo.where(
+		@active_sender_info = S3SenderInfo.find_by(
 			disable:0,
 			is_active:1
 		)
@@ -177,21 +177,23 @@ class S3basesController < ApplicationController
 
 	def bulk_submission
 		@shops = S3base.where(shop_name:params[:shop_name])
-		@sender_info = S3SenderInfo.last
+		@sender_info = S3SenderInfo.where("(is_active = ?) AND (id = ?)", 1,params[:sender_info_id])
 
-		result = S3base.bulk_submission(@sender_info,@shops)
-		result.each do |r|
-			logger.debug( "#{r[:shop_name]}:データ更新")
-			s = S3base.find_by(id: r[:id])
-			logger.debug( "id:#{r.id}")
-			s.update(
-				submit_status: r[:submit_status],
+		submitted_shop_id_array = S3base.bulk_submission(@sender_info,@shops)
+
+		if !submitted_shop_id_array.empty?
+			submitted_shops = S3base.where(id: submitted_shop_id_array)
+			logger.debug( "submitted_shop_id_array:#{submitted_shop_id_array}")
+			submitted_shops.update(
+				submit_status: 1,
 				submit_at: DateTime.current
 			)
 			logger.debug( "更新成功")
+		else
+			redirect_to s3bases_url,notice: "submit失敗"
+			return
 		end
-		flash[:notice] = "問い合わせ完了しました"
-		redirect_to s3bases_url
+		redirect_to s3bases_url,notice: "問い合わせ完了しました"
 	end
 
 end

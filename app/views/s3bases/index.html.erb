@@ -41,15 +41,13 @@
 				<th>件名</th>
 				<th>問い合わせ内容</th>
 			</tr>
-			<% @active_sender_info.each do |info| %>
 			<tr>
-				<td class="th_submit_status"><%= info.sender_name %></td>
-				<td class="th_submit_status"><%= info.tel %></td>
-				<td class="th_submit_status"><%= info.email %></td>
-				<td class="th_submit_status"><%= info.title %></td>
-				<td class="th_submit_status"><div class="cell-scroll"><%= info.content %></div></td>
+				<td class="th_submit_status"><%= @active_sender_info.sender_name %></td>
+				<td class="th_submit_status"><%= @active_sender_info.tel %></td>
+				<td class="th_submit_status"><%= @active_sender_info.email %></td>
+				<td class="th_submit_status"><%= @active_sender_info.title %></td>
+				<td class="th_submit_status"><div class="cell-scroll"><%= @active_sender_info.content %></div></td>
 			</tr>
-				<% end %>
 		</table>
 	<% end %>
 	<br>
@@ -72,72 +70,71 @@
 
 <div class="container">
 
-	<%= link_to "テスト",bulk_submission_s3bases_path(shop_name: "rhosoda"), method: :post %>
-
+	<%= link_to "submitテスト",bulk_submission_s3bases_path(sender_info_id: @active_sender_info.id,shop_name: "rhosoda"), method: :post %>
 	<% if @shop_datas%>
-			<%= form_with url: invoke_bulk_submission_lambda_s3bases_path	do |f| %>
-				<table border="1">
+		<%= form_with url: invoke_bulk_submission_lambda_s3bases_path	do |f| %>
+			<table border="1">
+				<tr>
+					<th>チェック</th>
+					<th>No.</th>
+					<th>ショップ名</th>
+					<th class="th_submit_status">問合せ</th>
+					<th>問合せ日時</th>
+					<th class="th_elapsed_days">経過日数</th>
+					<th>ショップ説明</th>
+				</tr>
+				<% @shop_datas.each_with_index do |data,i| %>
 					<tr>
-						<th>チェック</th>
-						<th>No.</th>
-						<th>ショップ名</th>
-						<th class="th_submit_status">問合せ</th>
-						<th>問合せ日時</th>
-						<th class="th_elapsed_days">経過日数</th>
-						<th>ショップ説明</th>
+						<td class="td_checkbox"> <%#チェック%>
+							<%= f.check_box(:ids,{multiple: true},data.id,nil) %>
+						</td>
+
+						<td class="td_shop_id"> <%#No.%>
+							<%= i+1 %>
+						</td>
+
+						<td class="td_shop_name"> <%#ショップ名%>
+							<a href="<%= data.shop_url %>" target="_blank" rel=”noopener noreferrer”>
+								<%= data.shop_name %>
+							</a>
+							<a href="<%= data.contact_url %>" target="_blank" rel=”noopener noreferrer”>
+								問い合わせフォーム
+							</a>
+						</td>
+
+						<td class="td_submit_status"> <%#問い合わせ状況%>
+							<% if data.submit_status == 0 %>
+								未
+							<% elsif data.submit_status == 1 %>
+								済
+							<% end %>
+						</td>
+
+						<td class="td_submit_at"> <%#問い合わせ日時%>
+							<% if data.submit_at.present? %>
+								<%= l data.submit_at, format: :short %>
+							<% end %>
+						</td>
+
+						<td class="td_elapsed_days"> <%#問い合わせ経過日数%>
+							<% if data.submit_at.present? %>
+								<%= ((DateTime.current.to_i - data.submit_at.to_i)/ 1.days).floor %>日
+							<% end %>
+						</td>
+
+						<td class="td_about_shop"> <%#ショップ説明%>
+							<div class="cell-scroll">
+								<%= data.about_shop %>
+							</div>
+						</td>
 					</tr>
-					<% @shop_datas.each_with_index do |data,i| %>
-						<tr>
-							<td class="td_checkbox"> <%#チェック%>
-								<%= f.check_box(:ids,{multiple: true},data.id,nil) %>
-							</td>
-
-							<td class="td_shop_id"> <%#No.%>
-								<%= i+1 %>
-							</td>
-
-							<td class="td_shop_name"> <%#ショップ名%>
-								<a href="<%= data.shop_url %>" target="_blank" rel=”noopener noreferrer”>
-									<%= data.shop_name %>
-								</a>
-								<a href="<%= data.contact_url %>" target="_blank" rel=”noopener noreferrer”>
-									問い合わせフォーム
-								</a>
-							</td>
-
-							<td class="td_submit_status"> <%#問い合わせ状況%>
-								<% if data.submit_status == 0 %>
-									未
-								<% elsif data.submit_status == 1 %>
-									済
-								<% end %>
-							</td>
-
-							<td class="td_submit_at"> <%#問い合わせ日時%>
-								<% if data.submit_at.present? %>
-									<%= l data.submit_at, format: :short %>
-								<% end %>
-							</td>
-
-							<td class="td_elapsed_days"> <%#問い合わせ経過日数%>
-								<% if data.submit_at.present? %>
-									<%= ((DateTime.current.to_i - data.submit_at.to_i)/ 1.days).floor %>日
-								<% end %>
-							</td>
-
-							<td class="td_about_shop"> <%#ショップ説明%>
-								<div class="cell-scroll">
-									<%= data.about_shop %>
-								</div>
-							</td>
-						</tr>
-					<% end %>
-					<%= f.submit "チェックしたショップに一括問い合わせ" %>
-					<br>
-					<input type="checkbox" id="check_all">
-					<label for="check_all">全チェック</label>
-				</table>
-			<% end %>
+				<% end %>
+				<%= f.submit "チェックしたショップに一括問い合わせ" %>
+				<br>
+				<input type="checkbox" id="check_all">
+				<label for="check_all">全チェック</label>
+			</table>
+		<% end %>
 	<% end %>
 </div>
 <br>
