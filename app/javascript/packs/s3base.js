@@ -15,6 +15,16 @@ $(document).on('turbolinks:load', function(){
 	});
 });
 
+$(document).on('turbolinks:load', function(){
+	$('#logout').on('click',function(){
+		$('#logout-modal').fadeIn();
+	});
+
+	$('#logout-no,.close-modal').on('click',function(){
+		$('#logout-modal').fadeOut();
+	});
+});
+
 
 // $(document).on('turbolinks:load', function(){
 //   $('p').on('click', function() {

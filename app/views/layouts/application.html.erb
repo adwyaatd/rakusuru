@@ -25,5 +25,22 @@
       </div>
     <% end %>
     <%= yield %>
+
+		<div class="logout-modal-wrapper" id="logout-modal">
+			<div class="modal">
+				<div class="close-modal">
+					<i class="fa fa-2x fa-times"></i>
+				</div>
+				<div id="login-form">
+					<h2>ログアウトしますか</h2>
+					<div>
+						<%= link_to "submitテスト",bulk_submission_s3bases_path(sender_info_id: @active_sender_info.id,shop_name: "rhosoda"), method: :post%>
+					</div>
+					<div id="logout-no" class="yes-no">
+						<a>いいえ</a>
+					</div>
+				</div>
+			</div>
+		</div>
   </body>
 </html>

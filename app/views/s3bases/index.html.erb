@@ -69,8 +69,6 @@
 <br>
 
 <div class="container">
-
-	<%= link_to "submitテスト",bulk_submission_s3bases_path(sender_info_id: @active_sender_info.id,shop_name: "rhosoda"), method: :post %>
 	<% if @shop_datas%>
 		<%= form_with url: invoke_bulk_submission_lambda_s3bases_path	do |f| %>
 			<table border="1">
@@ -130,6 +128,7 @@
 					</tr>
 				<% end %>
 				<%= f.submit "チェックしたショップに一括問い合わせ" %>
+				<a id="logout" href= "javascript:void(0)">ショップに一括問い合わせ(テスト用)</a>
 				<br>
 				<input type="checkbox" id="check_all">
 				<label for="check_all">全チェック</label>
