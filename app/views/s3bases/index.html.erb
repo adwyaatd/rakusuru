@@ -46,7 +46,7 @@
 				<td class="th_submit_status"><%= @active_sender_info.tel %></td>
 				<td class="th_submit_status"><%= @active_sender_info.email %></td>
 				<td class="th_submit_status"><%= @active_sender_info.title %></td>
-				<td class="th_submit_status"><div class="cell-scroll"><%= @active_sender_info.content %></div></td>
+				<td class="th_submit_status"><div class="cell-scroll"><%=  simple_format @active_sender_info.content %></div></td>
 			</tr>
 		</table>
 	<% end %>
@@ -70,7 +70,10 @@
 
 <div class="container">
 	<% if @shop_datas%>
-		<%= form_with url: invoke_bulk_submission_lambda_s3bases_path	do |f| %>
+		<%= form_with model: @shop_datas, local: true, url: {action: 'confirm'} do |f| %>
+		<%#= form_with url: confirm_s3bases_path	do |f| %>
+		<%#= form_with url: invoke_bulk_submission_lambda_s3bases_path	do |f| %>
+			<%= f.hidden_field :sender_info_id, value: @active_sender_info.id %>
 			<table border="1">
 				<tr>
 					<th>チェック</th>
@@ -84,7 +87,9 @@
 				<% @shop_datas.each_with_index do |data,i| %>
 					<tr>
 						<td class="td_checkbox"> <%#チェック%>
-							<%= f.check_box(:ids,{multiple: true},data.id,nil) %>
+							<% if data.submit_status == 0 %>
+								<%= f.check_box(:shop_ids,{multiple: true, checked: false},data.id,nil) %>
+							<% end %>
 						</td>
 
 						<td class="td_shop_id"> <%#No.%>
@@ -95,8 +100,9 @@
 							<a href="<%= data.shop_url %>" target="_blank" rel=”noopener noreferrer”>
 								<%= data.shop_name %>
 							</a>
+							<br>
 							<a href="<%= data.contact_url %>" target="_blank" rel=”noopener noreferrer”>
-								問い合わせフォーム
+								(問い合わせページ)
 							</a>
 						</td>
 
@@ -128,7 +134,8 @@
 					</tr>
 				<% end %>
 				<%= f.submit "チェックしたショップに一括問い合わせ" %>
-				<a id="logout" href= "javascript:void(0)">ショップに一括問い合わせ(テスト用)</a>
+				<!--<a id="bulk_submit" href= "javascript:void(0)">チェックしたショップに一括問い合わせ</a>-->
+				<a id="bulk_submit_test" href= "javascript:void(0)">ショップに一括問い合わせ(テスト用)</a>
 				<br>
 				<input type="checkbox" id="check_all">
 				<label for="check_all">全チェック</label>
@@ -137,5 +144,20 @@
 	<% end %>
 </div>
 <br>
-
+<div class="logout-modal-wrapper" id="logout-modal">
+	<div class="modal">
+		<div class="close-modal">
+			<i class="fa fa-2x fa-times"></i>
+		</div>
+		<div id="login-form">
+			<h2>送信しますか？</h2>
+			<div>
+				<%= link_to "submitテスト",bulk_submission_s3bases_path(sender_info_id: @active_sender_info.id,shop_name: "rhosoda"), method: :post%>
+			</div>
+			<div id="logout-no" class="yes-no">
+				<a>いいえ</a>
+			</div>
+		</div>
+	</div>
+</div>
 <%= javascript_pack_tag 's3base' %>

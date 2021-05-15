@@ -25,6 +25,7 @@ Rails.application.routes.draw do
 			post "invoke_base_scraping_lambda"
 			post "bulk_submission"
 			post "invoke_bulk_submission_lambda"
+			post "confirm"
 		end
 	end
 

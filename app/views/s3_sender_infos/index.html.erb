@@ -24,7 +24,7 @@
 				<td class="th_submit_status"><%= info.tel %></td>
 				<td class="th_submit_status"><%= info.email %></td>
 				<td class="th_submit_status"><%= info.title %></td>
-				<td class="th_submit_status"><div class="cell-scroll"><%= info.content %></div></td>
+				<td class="th_submit_status"><div class="cell-scroll"><%= simple_format info.content %></div></td>
 			</tr>
 				<% end %>
 		</table>
@@ -52,7 +52,7 @@
 				<td class="th_submit_status"><%= info.tel %></td>
 				<td class="th_submit_status"><%= info.email %></td>
 				<td class="th_submit_status"><%= info.title %></td>
-				<td class="th_submit_status"><div class="cell-scroll"><%= info.content %></div></td>
+				<td class="th_submit_status"><div class="cell-scroll"><%= simple_format info.content %></div></td>
 			</tr>
 				<% end %>
 		</table>
