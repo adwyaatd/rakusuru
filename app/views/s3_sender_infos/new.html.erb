@@ -9,16 +9,16 @@
 	<% end %>
   <%= form_with model: @sender_info do |f|%>
     <%= f.label :sender_name,"名前" %>
-    <%= f.text_field :sender_name %>
+    <%= f.text_field :sender_name,:size=>"50" %>
     <br>
     <%= f.label :tel,"電話番号" %>
-    <%= f.text_field :tel %>
+    <%= f.text_field :tel,:size=>"50" %>
     <br>
     <%= f.label :email,"メールアドレス" %>
-    <%= f.email_field :email %>
+    <%= f.email_field :email,:size=>"50" %>
     <br>
     <%= f.label :title,"件名" %>
-    <%= f.text_field :title %>
+    <%= f.text_field :title, :size=>"100" %>
     <br>
     <%= f.label :content,"内容" %>
     <%= f.text_area :content,cols:100,rows: 10%>

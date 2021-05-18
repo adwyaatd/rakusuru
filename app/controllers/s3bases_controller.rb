@@ -3,7 +3,8 @@ class S3basesController < ApplicationController
 	end
 
 	def collect
-  end
+		@collect_records = CollectHistory.all
+	end
 
 	def submit
 		if params[:search]
@@ -19,6 +20,11 @@ class S3basesController < ApplicationController
 		elsif params[:scraping_id] == "last"
 			@shop_datas = S3base.where(
 				scraping_id: S3base.maximum(:scraping_id),
+				disable: 0
+			)
+		elsif params[:scraping_id]
+			@shop_datas = S3base.where(
+				scraping_id: params[:scraping_id],
 				disable: 0
 			)
 		elsif params[:submit_status] == "0"

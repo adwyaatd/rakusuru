@@ -1,8 +1,5 @@
 Rails.application.routes.draw do
 
-  get 's3_sender_infos/index'
-  # get 's3_sender_info/index'
-  # get 's4tunos/index'
 	root 'homes#top'
 	get '/' => 'homes#top'
 

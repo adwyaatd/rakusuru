@@ -10,7 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_09_060204) do
+ActiveRecord::Schema.define(version: 2021_05_18_123027) do
+
+  create_table "collect_histories", charset: "utf8mb4", force: :cascade do |t|
+    t.integer "scraping_id"
+    t.string "search_word"
+    t.string "domain"
+    t.integer "existing_shop_count"
+    t.integer "new_shop_count"
+    t.integer "updated_shop_count"
+    t.integer "disable", default: 0
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
 
   create_table "s1_switches", charset: "utf8mb4", force: :cascade do |t|
     t.string "price"

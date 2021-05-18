@@ -25,3 +25,49 @@
 		<%= f.submit "ショップ情報を収集", name: nil %>
 	<% end %>
 </div>
+<br>
+<div class="container">
+	<% if @collect_records%>
+		<table border="1">
+			<tr>
+				<th>ID</th>
+				<th>検索ワード</th>
+				<th>ドメイン</th>
+				<th>新規ショップ数</th>
+				<th>既存ショップ数</th>
+				<th>更新ショップ数</th>
+				<th>収集日時</th>
+				<th>収集したショップ一覧</th>
+			</tr>
+			<% @collect_records.each_with_index do |record,i| %>
+			<tr class="tr_collect_record">
+				<td>
+					<%= record.scraping_id %>
+				</td>
+				<td>
+					<%= record.search_word %>
+				</td>
+				<td>
+					<%= record.domain %>
+				</td>
+				<td class="min_width">
+					<%= record.new_shop_count %>
+				</td>
+				<td class="min_width">
+					<%= record.existing_shop_count %>
+				</td>
+				<td class="min_width">
+					<%= record.updated_shop_count %>
+				</td>
+				<td class="min_width">
+					<%= l record.created_at, format: :short %>
+				</td>
+				<td class="min_width">
+					<%= link_to "ショップ一覧", submit_s3bases_path(scraping_id: record.scraping_id)%>
+				</td>
+			</tr>
+			<% end %>
+		</table>
+	<% end %>
+</div>
+

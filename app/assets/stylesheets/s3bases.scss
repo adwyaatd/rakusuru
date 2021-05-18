@@ -10,6 +10,13 @@
 table{
 	width: 100%;
 	font-size: 11px;
+	.cell-scroll{
+		font-size: 11px;
+		overflow-y: auto;
+	}
+	.min_width{
+		width: 10%;
+	}
 	.tr_submit_status{
 		height: 100px;
 	}
@@ -42,8 +49,7 @@ table{
 	.td_about_shop{
 		width: 30%;
 	}
-	.cell-scroll{
-		font-size: 11px;
-		overflow-y: auto;
+	.tr_collect_record{
+		text-align: center;
 	}
 }
