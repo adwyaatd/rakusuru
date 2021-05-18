@@ -13,7 +13,9 @@
 			<td class="th_submit_status"><%= @sender_info.tel %></td>
 			<td class="th_submit_status"><%= @sender_info.email %></td>
 			<td class="th_submit_status"><%= @sender_info.title %></td>
-			<td class="th_submit_status"><div class="cell-scroll"><%= @sender_info.content %></div></td>
+		</tr>
+		<tr>
+			<td class="th_submit_status"><div class="cell-scroll"><%= simple_format @sender_info.content %></div></td>
 		</tr>
 	</table>
 	<br>
@@ -23,9 +25,7 @@
 		<br>
 		<%= f.submit "一括問い合わせ実行" %>
 		<br>
-		<p>問い合わせショップ数：<%= @shops.size %></p>
-
-		<p>shopids：<%= @shop_ids %></p>
+		<p>問い合わせショップ数：<%= @shops.size %>件</p>
 		<% @shops.each_with_index do |shop,i| %>
 			<%= i+1 %> : <%= shop.shop_name %>
 			<%= f.hidden_field :shop_ids, multiple: true,value: shop.id %>

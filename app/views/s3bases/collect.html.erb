@@ -1,0 +1,27 @@
+<% if Rails.env.development? || Rails.env.test? %>
+	<%= link_to"トップページへ戻る",s3bases_path%>
+<% end %>
+<br>
+<%= link_to"問い合わせページへ",submit_s3bases_path%>
+
+<div class="container">
+	<h3>【ショップ情報収集機能】</h3>
+	<p>
+		①キーワードを指定せずショップ情報を集める
+		<br>
+		　：システムがネット上からBASEの人気ショップの情報を自動で集め、下記の表に追加します。クリック後、10分ほど待ってください。
+	</p>
+	　<%= link_to"ショップ情報を収集(キーワードなし)", invoke_base_scraping_lambda_s3bases_path, method: :post %>
+	<br>
+	<p>
+		②キーワードを指定してショップ情報を集める
+		<br>
+		　：キーワードでショップ情報を収集・下記の表に追加する機能です。
+		<br>
+		　(ex:「ファッション」で検索すると、システムが自動で「ファッション」関係のBASEのショップを一定数ネット上から集め、下記の表に追加します)
+	</p>
+	<%= form_with url:invoke_base_scraping_lambda_s3bases_path,method: :post do |f| %>
+		<%= f.text_field :search_word,placeholder: "キーワードを入力" %>
+		<%= f.submit "ショップ情報を収集", name: nil %>
+	<% end %>
+</div>

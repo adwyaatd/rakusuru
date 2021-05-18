@@ -1,0 +1,141 @@
+<% if Rails.env.development? || Rails.env.test? %>
+	<%= link_to"トップページへ戻る",s3bases_path%>
+<% end %>
+<br>
+<%= link_to"情報収集ページへ",collect_s3bases_path%>
+
+<div class="container">
+	<h3>【一括問い合わせ機能】</h3>
+	<p>
+		下記ショップ一覧から選択したショップへ、以下のテンプレート内容で一括で問い合わせを行います。
+	</p>
+
+	<% if @active_sender_info %>
+		<p>【問い合わせテンプレート】　<%= link_to "テンプレートを作成・変更",s3_sender_infos_index_path %></p>
+		<table border="1">
+			<tr>
+				<th>名前</th>
+				<th>tel</th>
+				<th>メールアドレス</th>
+				<th>件名</th>
+				<th>問い合わせ内容</th>
+			</tr>
+			<tr class="tr_submit_status">
+				<td class="td_sender_info"><%= @active_sender_info.sender_name %></td>
+				<td class="td_sender_info"><%= @active_sender_info.tel %></td>
+				<td class="td_sender_info"><%= @active_sender_info.email %></td>
+				<td class="td_sender_info"><%= @active_sender_info.title %></td>
+				<td class="td_sender_info"><div class="td_sender_info_content"><%=  simple_format @active_sender_info.content %></div></td>
+			</tr>
+		</table>
+	<% end %>
+	<br>
+
+	<p>【ショップを検索】</p>
+	<%= form_with url:s3bases_path ,method: :get,local: true do |f|%>
+		<%= f.text_field :search,placeholder: "キーワードを入力" %>
+		<%= f.submit "システム内を検索" %>
+	<% end %>
+
+	<%= link_to "最新で取得したショップを表示",s3bases_path(scraping_id: "last") %>
+	<br>
+	<%= link_to "未問い合わせのショップを表示",s3bases_path(submit_status: 0) %>
+	<br>
+	<%= link_to "問い合わせ済みのショップを表示",s3bases_path(submit_status: 1) %>
+	<br>
+	<%= link_to "全ショップ表示",s3bases_path(id: "all") %>
+</div>
+<br>
+
+<div class="container">
+	<% if @shop_datas%>
+		<%= form_with model: @shop_datas, local: true, url: {action: 'confirm'} do |f| %>
+		<%#= form_with url: invoke_bulk_submission_lambda_s3bases_path	do |f| %>
+			<%= f.hidden_field :sender_info_id, value: @active_sender_info.id %>
+			<table border="1">
+				<tr>
+					<th>チェック</th>
+					<th>No.</th>
+					<th>ショップ名</th>
+					<th class="th_submit_status">問合せ</th>
+					<th>問合せ日時</th>
+					<th class="th_elapsed_days">経過日数</th>
+					<th>ショップ説明</th>
+				</tr>
+				<% @shop_datas.each_with_index do |data,i| %>
+					<tr>
+						<td class="td_checkbox"> <%#チェック%>
+							<% if data.submit_status == 0 %>
+								<%= f.check_box(:shop_ids,{multiple: true},data.id,nil) %>
+							<% end %>
+						</td>
+
+						<td class="td_shop_id"> <%#No.%>
+							<%= i+1 %>
+						</td>
+
+						<td class="td_shop_name"> <%#ショップ名%>
+							<a href="<%= data.shop_url %>" target="_blank" rel=”noopener noreferrer”>
+								<%= data.shop_name %>
+							</a>
+							<br>
+							<a href="<%= data.contact_url %>" target="_blank" rel=”noopener noreferrer”>
+								(問い合わせページ)
+							</a>
+						</td>
+
+						<td class="td_submit_status"> <%#問い合わせ状況%>
+							<% if data.submit_status == 0 %>
+								未
+							<% elsif data.submit_status == 1 %>
+								済
+							<% end %>
+						</td>
+
+						<td class="td_submit_at"> <%#問い合わせ日時%>
+							<% if data.submit_at.present? %>
+								<%= l data.submit_at, format: :short %>
+							<% end %>
+						</td>
+
+						<td class="td_elapsed_days"> <%#問い合わせ経過日数%>
+							<% if data.submit_at.present? %>
+								<%= ((DateTime.current.to_i - data.submit_at.to_i)/ 1.days).floor %>日
+							<% end %>
+						</td>
+
+						<td class="td_about_shop"> <%#ショップ説明%>
+							<div class="cell-scroll">
+								<%= data.about_shop %>
+							</div>
+						</td>
+					</tr>
+				<% end %>
+				<%= f.submit "チェックしたショップに一括問い合わせ" %>
+				<!--<a id="bulk_submit" href= "javascript:void(0)">チェックしたショップに一括問い合わせ</a>-->
+				<a id="bulk_submit_test" href= "javascript:void(0)">ショップに一括問い合わせ(テスト用)</a>
+				<br>
+				<input type="checkbox" id="check_all">
+				<label for="check_all">全チェック</label>
+			</table>
+		<% end %>
+	<% end %>
+</div>
+<br>
+<div class="logout-modal-wrapper" id="logout-modal">
+	<div class="modal">
+		<div class="close-modal">
+			<i class="fa fa-2x fa-times"></i>
+		</div>
+		<div id="login-form">
+			<h2>送信しますか？</h2>
+			<div>
+				<%= link_to "submitテスト",bulk_submission_s3bases_path(sender_info_id: @active_sender_info.id,shop_name: "rhosoda"), method: :post%>
+			</div>
+			<div id="logout-no" class="yes-no">
+				<a>いいえ</a>
+			</div>
+		</div>
+	</div>
+</div>
+<%= javascript_pack_tag 's3base' %>

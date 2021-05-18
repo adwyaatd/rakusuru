@@ -1,4 +1,4 @@
-<%= link_to"トップページへ戻る",s3bases_path%>
+<%= link_to"問い合わせページへ戻る",s3bases_path%>
 <br>
 <h2>テンプレート一覧</h2>
 <div class="container">
@@ -6,28 +6,40 @@
 
 	<h3>使用するテンプレート</h3>
 	<% if @active_sender_info %>
+		<% @active_sender_info.each do |info| %>
 		<table border="1">
 			<tr>
 				<th></th>
 				<th>名前</th>
 				<th>tel</th>
 				<th>メールアドレス</th>
-				<th>件名</th>
-				<th>問い合わせ内容</th>
 			</tr>
-			<% @active_sender_info.each do |info| %>
 			<tr>
-				<td class="th_submit_status">
+				<td>
 					<%= link_to "編集",edit_s3_sender_info_path(info.id) %>
 				</td>
-				<td class="th_submit_status"><%= info.sender_name %></td>
-				<td class="th_submit_status"><%= info.tel %></td>
-				<td class="th_submit_status"><%= info.email %></td>
-				<td class="th_submit_status"><%= info.title %></td>
-				<td class="th_submit_status"><div class="cell-scroll"><%= simple_format info.content %></div></td>
+				<td><%= info.sender_name %></td>
+				<td><%= info.tel %></td>
+				<td><%= info.email %></td>
 			</tr>
-				<% end %>
 		</table>
+		<table border="1">
+			<tr>
+				<th>件名</th>
+			</tr>
+			<tr>
+				<td><%= info.title %></td>
+			</tr>
+		</table>
+		<table border="1">
+			<tr>
+				<th>問い合わせ内容</th>
+			</tr>
+			<tr>
+				<td><%= simple_format info.content %></td>
+			</tr>
+		</table>
+		<% end %>
 	<% end %>
 	<br>
 	<h3>その他のテンプレート</h3>
@@ -39,20 +51,20 @@
 				<th>tel</th>
 				<th>メールアドレス</th>
 				<th>件名</th>
-				<th>問い合わせ内容</th>
+				<th class="th_sender_content">問い合わせ内容</th>
 			</tr>
 			<% @sender_infos.each do |info| %>
 			<tr>
-				<td class="th_submit_status">
+				<td>
 					<%= link_to "編集",edit_s3_sender_info_path(info) %>
 					<br>
 					<%= link_to "このテンプレを使用する",activate_s3_sender_infos_path(id: info.id), method: :post%>
 				</td>
-				<td class="th_submit_status"><%= info.sender_name %></td>
-				<td class="th_submit_status"><%= info.tel %></td>
-				<td class="th_submit_status"><%= info.email %></td>
-				<td class="th_submit_status"><%= info.title %></td>
-				<td class="th_submit_status"><div class="cell-scroll"><%= simple_format info.content %></div></td>
+				<td><%= info.sender_name %></td>
+				<td><%= info.tel %></td>
+				<td><%= info.email %></td>
+				<td><div class="cell-scroll"><%= info.title %></div></td>
+				<td><div class="cell-scroll"><%= simple_format info.content %></div></td>
 			</tr>
 				<% end %>
 		</table>

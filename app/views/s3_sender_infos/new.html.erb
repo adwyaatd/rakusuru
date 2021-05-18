@@ -21,7 +21,7 @@
     <%= f.text_field :title %>
     <br>
     <%= f.label :content,"内容" %>
-    <%= f.text_area :content %>
+    <%= f.text_area :content,cols:100,rows: 10%>
     <br>
     <%= f.submit "新規設定" %>
     <%= f.hidden_field :disable, value: 0 %>

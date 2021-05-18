@@ -9,9 +9,17 @@
 
 table{
 	width: 100%;
-	font-size: 13px;
-	.th_submit_status{
-		white-space: nowrap;
+	font-size: 11px;
+	.tr_submit_status{
+		height: 100px;
+	}
+	.td_sender_info{
+		height: 100px;
+	}
+	.td_sender_info_content{
+		font-size: 11px;
+		overflow-y: auto;
+		height: 100px;
 	}
 	.th_elapsed_days{
 		white-space: nowrap;

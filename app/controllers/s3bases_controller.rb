@@ -1,5 +1,11 @@
 class S3basesController < ApplicationController
 	def index
+	end
+
+	def collect
+  end
+
+	def submit
 		if params[:search]
 			@shop_datas = S3base.where(
 				"(about_shop LIKE ?) OR (shop_name LIKE ?)",
