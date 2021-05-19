@@ -1,0 +1,35 @@
+<h2>確認</h2>
+<div class="container">
+	<table border="1">
+		<tr>
+			<th>名前</th>
+			<th>tel</th>
+			<th>メールアドレス</th>
+			<th>件名</th>
+			<th>問い合わせ内容</th>
+		</tr>
+		<tr>
+			<td class="th_submit_status"><%= @sender_info.sender_name %></td>
+			<td class="th_submit_status"><%= @sender_info.tel %></td>
+			<td class="th_submit_status"><%= @sender_info.email %></td>
+			<td class="th_submit_status"><%= @sender_info.title %></td>
+		</tr>
+		<tr>
+			<td class="th_submit_status"><div class="cell-scroll"><%= simple_format @sender_info.content %></div></td>
+		</tr>
+	</table>
+	<br>
+	<%= form_with url:invoke_bulk_submission_lambda_s3bases_path, local: true do |f| %>
+		<%= f.hidden_field :sender_info_id, value: @sender_info.id %>
+		<%= f.submit "ショップ選択に戻る",name: "back" %>
+		<br>
+		<%= f.submit "一括問い合わせ実行" %>
+		<br>
+		<p>問い合わせショップ数：<%= @shops.size %>件</p>
+		<% @shops.each_with_index do |shop,i| %>
+			<%= i+1 %> : <%= shop.shop_name %>
+			<%= f.hidden_field :shop_ids, multiple: true,value: shop.id %>
+			<br>
+		<% end %>
+	<% end %>
+</div>

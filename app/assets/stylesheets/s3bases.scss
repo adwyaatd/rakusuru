@@ -9,9 +9,24 @@
 
 table{
 	width: 100%;
-	font-size: 13px;
-	.th_submit_status{
-		white-space: nowrap;
+	font-size: 11px;
+	.cell-scroll{
+		font-size: 11px;
+		overflow-y: auto;
+	}
+	.min_width{
+		width: 10%;
+	}
+	.tr_submit_status{
+		height: 100px;
+	}
+	.td_sender_info{
+		height: 100px;
+	}
+	.td_sender_info_content{
+		font-size: 11px;
+		overflow-y: auto;
+		height: 100px;
 	}
 	.th_elapsed_days{
 		white-space: nowrap;
@@ -34,8 +49,7 @@ table{
 	.td_about_shop{
 		width: 30%;
 	}
-	.cell-scroll{
-		font-size: 11px;
-		overflow-y: auto;
+	.tr_collect_record{
+		text-align: center;
 	}
 }

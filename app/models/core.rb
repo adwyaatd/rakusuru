@@ -34,11 +34,15 @@ class Core
 
 	def check_element(d,attri,val,text="")
 		wait = Selenium::WebDriver::Wait.new(:timeout => 2)
-
+		retry_cnt = 0
 		ret = true
 		begin
 			element = wait.until{ d.find_element(attri,val) }
 		rescue
+			if retry_cnt <= 4
+				retry_cnt += 1
+				retry
+			end
 			ret = false
 		else
 			if !element.text.include?(text)

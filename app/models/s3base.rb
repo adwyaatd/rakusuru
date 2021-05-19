@@ -105,83 +105,85 @@ class S3base < ApplicationRecord
 	end
 
 	def self.bulk_submission(sender_info,shops)
-
 		# logger.debug("sender_info:#{sender_info.inspect}")
 		# logger.debug("shops:#{shops.inspect}")
-
+		submitted_shop_id_array = []
 		core = Core.new
-
 		wait = Selenium::WebDriver::Wait.new(:timeout => 5)
 
-    begin
-      d = core.get_driver
+		d = core.get_driver
 
-      shops.each_with_index do |shop, i|
-        # logger.debug("問い合わせURLにアクセス")
-        d.navigate.to shop.contact_url
+		shops.each_with_index do |shop, i|
+			# logger.debug("問い合わせURLにアクセス")
+			d.navigate.to shop.contact_url
 
-        # Base以外のサイトに入った場合
-        unless core.check_element(d,:xpath,"//a[contains(@href,'base')]")
-          # logger.debug("Base以外に入った")
-          next
-        end
+			# Base以外のサイトに入った場合
+			unless core.check_element(d,:xpath,"//a[contains(@href,'base')]")
+				# logger.debug("Base以外に入った")
+				next
+			end
 
-        shop_name = d.title
-        unless shop_name.include?(shop.shop_name)
-          logger.debug("ショップ名不一致")
-          logger.debug("取得したショップ名：　　#{shop_name}")
-          logger.debug("用意していたショップ名：#{shop.shop_name}")
-          next
-        end
+			shop_name = d.title
+			unless shop_name.include?(shop.shop_name)
+				logger.debug("ショップ名不一致")
+				logger.debug("取得したショップ名：　　#{shop_name}")
+				logger.debug("用意していたショップ名：#{shop.shop_name}")
+				next
+			end
 
-        # 各欄に受け取った値を入力
-        name_element = d.find_element(:id,"ShopInquiryName")
-        name_element.send_key(sender_info.sender_name)
+			# 各欄に受け取った値を入力
+			name_element = d.find_element(:id,"ShopInquiryName")
+			name_element.send_key(sender_info[0][:sender_name])
 
-        tel_element = d.find_element(:id,"ShopInquiryTel")
-        tel_element.send_key(sender_info.tel)
+			tel_element = d.find_element(:id,"ShopInquiryTel")
+			tel_element.send_key(sender_info[0][:tel])
 
-        email_element = d.find_element(:id,"ShopInquiryMailAddress")
-        email_element.send_key(sender_info.email)
+			email_element = d.find_element(:id,"ShopInquiryMailAddress")
+			email_element.send_key(sender_info[0][:email])
 
-        title_element = d.find_element(:id,"ShopInquiryTitle")
-        title_element.send_key(sender_info.title)
+			title_element = d.find_element(:id,"ShopInquiryTitle")
+			title_element.send_key(sender_info[0][:title])
 
-        content_element = d.find_element(:id,"ShopInquiryInquiry")
-        content_element.send_key("#{sender_info.content}")
+			content_element = d.find_element(:id,"ShopInquiryInquiry")
+			content_element.send_key(sender_info[0][:content])
 
-				d.find_element(:id,"buttonLeave").click
+			d.find_element(:id,"buttonLeave").click
 
-        unless core.check_element(d,:id, "inquiryConfirmSection")
-          logger.debug("確認ページ以外に入った")
-          next
-        end
+			# 問い合わせ内容確認ページへ
+			unless core.check_element(d,:id, "inquiryConfirmSection")
+				logger.debug("確認ページ以外に入った")
+				next
+			else
+				logger.debug("確認ページに入った")
+			end
 
-        # d.find_element(:id,"buttonLeave").click
-        if core.check_element(d,:id,"buttonLeave")
-					logger.debug("成功！")
-					# shop.submit_status = 1
-        end
+			# 「送信する」をクリック
+			submit_btn = wait.until{ d.find_element(:id,"buttonLeave") }
+			sleep(1)
+			submit_btn.click
 
-        # unless core.check_element(d,:id, "inquiryCompleteSection")
-        #   # logger.debug("完了ページ以外に入った")
-        #   next
-        # end
+			# 送信完了ページへ
+			if core.check_element(d,:id,"inquiryCompleteSection")
+				logger.debug("送信完了！")
+				submitted_shop_id_array.push(shop.id)
+			else
+				logger.debug("完了ページ以外に入った")
+				next
+			end
 
+			logger.debug("問い合わせ操作#{i+1}完了")
+		end
 
-        logger.debug("問い合わせ操作#{i+1}完了")
-      end
+		logger.debug("全問い合わせ操作完了")
 
-      logger.debug("全問い合わせ操作完了")
+		d.quit
 
-      d.quit
-
-			# logger.debug("shops:#{shops}")
-			return shops
-    rescue => e
-			logger.error("----------------------[error]line:#{__LINE__},error:#{e.message},#{e.backtrace.join("\n")} ---------------------------")
-			d.quit
-			return shops
-    end
+		# logger.debug("shops:#{shops}")
+		pp submitted_shop_id_array
+		return submitted_shop_id_array
+	rescue => e
+		logger.error("----------------------[error]line:#{__LINE__},error:#{e.message},#{e.backtrace.join("\n")} ---------------------------")
+		d.quit
+		return submitted_shop_id_array
 	end
 end

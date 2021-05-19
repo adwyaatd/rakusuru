@@ -1,0 +1,31 @@
+<%= link_to"テンプレート一覧へ戻る",s3_sender_infos_path%>
+<div class="container">
+	<h1>編集する</h1>
+	<div class="form">
+		<div class="form-body">
+			<% @sender_info.errors.full_messages.each do |message| %>
+				<div class="form-error">
+					<%= message %>
+				</div>
+			<% end %>
+			<%= form_with model:@sender_info do |f| %>
+				<%= f.label :sender_name,"名前" %>
+				<%= f.text_field :sender_name,:size=>"50" %>
+				<br>
+				<%= f.label :tel,"電話番号" %>
+				<%= f.text_field :tel,:size=>"50" %>
+				<br>
+				<%= f.label :email,"メールアドレス" %>
+				<%= f.email_field :email,:size=>"50" %>
+				<br>
+				<%= f.label :title,"件名" %>
+				<%= f.text_field :title,:size=>"100" %>
+				<br>
+				<%= f.label :content,"内容" %>
+				<%= f.text_area :content,cols:100,rows: 10 %>
+				<br>
+				<%= f.submit "変更する"%>
+			<% end %>
+		</div>
+	</div>
+</div>

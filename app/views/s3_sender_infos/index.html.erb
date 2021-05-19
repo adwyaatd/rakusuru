@@ -1,44 +1,70 @@
-<%= link_to"トップページへ戻る",s3bases_path%>
+<%= link_to"問い合わせページへ戻る",submit_s3bases_path%>
 <br>
-
-<%= form_with model: @sender_info do |f|%>
-	<%= f.label :sender_name,"名前" %>
-	<%= f.text_field :sender_name %>
-	<br>
-	<%= f.label :tel,"電話番号" %>
-	<%= f.text_field :tel %>
-	<br>
-	<%= f.label :email,"メールアドレス" %>
-	<%= f.email_field :email %>
-	<br>
-	<%= f.label :title,"件名" %>
-	<%= f.text_field :title %>
-	<br>
-	<%= f.label :content,"内容" %>
-	<%= f.text_area :content %>
-	<br>
-	<%= f.submit "新規設定" %>
-<% end %>
-
+<h2>テンプレート一覧</h2>
 <div class="container">
+	<%= link_to"新規作成",new_s3_sender_info_path %>
+
+	<h3>使用するテンプレート</h3>
+	<% if @active_sender_info %>
+		<% @active_sender_info.each do |info| %>
+		<table border="1">
+			<tr>
+				<th></th>
+				<th>名前</th>
+				<th>tel</th>
+				<th>メールアドレス</th>
+			</tr>
+			<tr>
+				<td>
+					<%= link_to "編集",edit_s3_sender_info_path(info.id) %>
+				</td>
+				<td><%= info.sender_name %></td>
+				<td><%= info.tel %></td>
+				<td><%= info.email %></td>
+			</tr>
+		</table>
+		<table border="1">
+			<tr>
+				<th>件名</th>
+			</tr>
+			<tr>
+				<td><%= info.title %></td>
+			</tr>
+		</table>
+		<table border="1">
+			<tr>
+				<th>問い合わせ内容</th>
+			</tr>
+			<tr>
+				<td><%= simple_format info.content %></td>
+			</tr>
+		</table>
+		<% end %>
+	<% end %>
+	<br>
+	<h3>その他のテンプレート</h3>
 	<% if @sender_infos %>
 		<table border="1">
 			<tr>
-				<th>id</th>
+				<th></th>
 				<th>名前</th>
 				<th>tel</th>
 				<th>メールアドレス</th>
 				<th>件名</th>
-				<th>問い合わせ内容</th>
+				<th class="th_sender_content">問い合わせ内容</th>
 			</tr>
 			<% @sender_infos.each do |info| %>
 			<tr>
-				<td class="td_shop_name"><%= info.id %></td>
-				<td class="td_shop_name"><%= info.sender_name %></td>
-				<td class="td_shop_name"><%= info.tel %></td>
-				<td class="td_shop_name"><%= info.email %></td>
-				<td class="td_shop_name"><%= info.title %></td>
-				<td class="td_shop_name"><div class="cell-scroll"><%= info.content %></div></td>
+				<td>
+					<%= link_to "編集",edit_s3_sender_info_path(info) %>
+					<br>
+					<%= link_to "このテンプレを使用する",activate_s3_sender_infos_path(id: info.id), method: :post%>
+				</td>
+				<td><%= info.sender_name %></td>
+				<td><%= info.tel %></td>
+				<td><%= info.email %></td>
+				<td><%= info.title %></td>
+				<td><div class="cell-scroll"><%= simple_format info.content %></div></td>
 			</tr>
 				<% end %>
 		</table>

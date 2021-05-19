@@ -1,0 +1,2 @@
+class CollectHistory < ApplicationRecord
+end
