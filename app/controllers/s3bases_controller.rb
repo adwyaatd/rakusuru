@@ -1,4 +1,5 @@
 class S3basesController < ApplicationController
+
 	def index
 	end
 
@@ -7,6 +8,8 @@ class S3basesController < ApplicationController
 	end
 
 	def submit
+		redirect_to new_s3_sender_info_path,notice: "問い合わせテンプレートを登録しましょう" unless S3SenderInfo.where(disable: 0).exists?
+
 		if params[:search]
 			@shop_datas = S3base.where(
 				"(about_shop LIKE ?) OR (shop_name LIKE ?)",
