@@ -1,21 +1,26 @@
 <h2>確認</h2>
 <div class="container">
+	<h3>問い合わせ内容</h3>
 	<table border="1">
 		<tr>
 			<th>名前</th>
 			<th>tel</th>
 			<th>メールアドレス</th>
 			<th>件名</th>
+		</tr>
+		<tr>
+			<td><%= @sender_info.sender_name %></td>
+			<td><%= @sender_info.tel %></td>
+			<td><%= @sender_info.email %></td>
+			<td><%= @sender_info.title %></td>
+		</tr>
+	</table>
+	<table border="1">
+		<tr>
 			<th>問い合わせ内容</th>
 		</tr>
 		<tr>
-			<td class="th_submit_status"><%= @sender_info.sender_name %></td>
-			<td class="th_submit_status"><%= @sender_info.tel %></td>
-			<td class="th_submit_status"><%= @sender_info.email %></td>
-			<td class="th_submit_status"><%= @sender_info.title %></td>
-		</tr>
-		<tr>
-			<td class="th_submit_status"><div class="cell-scroll"><%= simple_format @sender_info.content %></div></td>
+			<td><%= simple_format @sender_info.content %></td>
 		</tr>
 	</table>
 	<br>
@@ -23,7 +28,25 @@
 		<%= f.hidden_field :sender_info_id, value: @sender_info.id %>
 		<%= f.submit "ショップ選択に戻る",name: "back" %>
 		<br>
-		<%= f.submit "一括問い合わせ実行" %>
+		<br>
+		<a id="confirm_submission" href= "javascript:void(0)">一括問い合わせ実行</a>
+		<div class="modal_wrapper" id="confirm_modal">
+			<div class="modal">
+				<div class="close_modal">
+					<i class="fa fa_2x fa_times"></i>
+				</div>
+				<div id="modal_form">
+					<h2>送信しますか？</h2>
+					<div>
+						<%= f.submit "一括問い合わせ実行" %>
+					</div>
+					<div id="select_no" class="yes_no">
+						<a>いいえ</a>
+					</div>
+				</div>
+			</div>
+		</div>
+
 		<br>
 		<p>問い合わせショップ数：<%= @shops.size %>件</p>
 		<% @shops.each_with_index do |shop,i| %>
@@ -33,3 +56,5 @@
 		<% end %>
 	<% end %>
 </div>
+
+<%= javascript_pack_tag 's3base' %>

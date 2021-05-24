@@ -1,32 +1,41 @@
-<% if Rails.env.development? || Rails.env.test? %>
-	<%= link_to"トップページへ戻る",s3bases_path%>
-<% end %>
+<%= link_to"トップページへ戻る",s3bases_path%>
 <br>
-<%= link_to"問い合わせページへ",submit_s3bases_path%>
+<%= link_to"問い合わせページへ",submit_s3bases_path, data: {"turbolinks" => false} %>
 
 <div class="container">
 	<h3>【ショップ情報収集機能】</h3>
 	<p>
-		①キーワードを指定せずショップ情報を集める
-		<br>
-		　：システムがネット上からBASEの人気ショップの情報を自動で集め、下記の表に追加します。クリック後、10分ほど待ってください。
-	</p>
-	　<%= link_to"ショップ情報を収集(キーワードなし)", invoke_base_scraping_lambda_s3bases_path, method: :post %>
-	<br>
-	<p>
-		②キーワードを指定してショップ情報を集める
+		キーワードを指定してショップ情報を集める
 		<br>
 		　：キーワードでショップ情報を収集・下記の表に追加する機能です。
 		<br>
 		　(ex:「ファッション」で検索すると、システムが自動で「ファッション」関係のBASEのショップを一定数ネット上から集め、下記の表に追加します)
 	</p>
 	<%= form_with url:invoke_base_scraping_lambda_s3bases_path,method: :post do |f| %>
-		<%= f.text_field :search_word,placeholder: "キーワードを入力" %>
-		<%= f.submit "ショップ情報を収集", name: nil %>
+		<%= f.text_field :search_word,placeholder: "キーワードを入力",id: "input_search_word" %>
+		<a id="collect_search_word" href= "javascript:void(0)" onclick="clickCollectSearchword()">ショップ情報を収集</a>
+		<div class="modal_wrapper" id="collect_search_word_modal">
+			<div class="modal">
+				<div class="close_modal">
+					<i class="fa fa_2x fa_times"></i>
+				</div>
+				<div id="modal_form">
+					<h2>実行しますか？</h2>
+					<p>検索ワード:<span id="affected_search_word"></span></p>
+					<div>
+						<%= f.submit "ショップ情報を収集", name: nil %>
+					</div>
+					<div id="select_no" class="yes_no">
+						<a>いいえ</a>
+					</div>
+				</div>
+			</div>
+		</div>
 	<% end %>
 </div>
 <br>
 <div class="container">
+	<h3>ショップ情報収集履歴</h3>
 	<% if @collect_records%>
 		<table border="1">
 			<tr>
@@ -63,7 +72,7 @@
 					<%= l record.created_at, format: :short %>
 				</td>
 				<td class="min_width">
-					<%= link_to "ショップ一覧", submit_s3bases_path(scraping_id: record.scraping_id)%>
+					<%= link_to "ショップ一覧", submit_s3bases_path(scraping_id: record.scraping_id),data: {"turbolinks" => false}%>
 				</td>
 			</tr>
 			<% end %>
@@ -71,3 +80,15 @@
 	<% end %>
 </div>
 
+<script>
+	function clickCollectSearchword() {
+		const t = document.getElementById("input_search_word").value;
+		if (t==""){
+			document.getElementById("affected_search_word").textContent = "なし"
+		}else{
+			document.getElementById("affected_search_word").textContent = t
+		}
+	}
+</script>
+
+<%= javascript_pack_tag 's3base' %>

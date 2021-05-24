@@ -1,12 +1,13 @@
 Rails.application.routes.draw do
 
-	root 'homes#top'
-	get '/' => 'homes#top'
+	root 's3bases#index'
+	get '/' => 's3bases#index'
 
 	resources :homes do
 		collection do
-			get :scr
-			get :scr2
+			get "top"
+			get "scr"
+			get "scr2"
 		end
 	end
 
