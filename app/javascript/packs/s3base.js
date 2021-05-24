@@ -17,14 +17,55 @@ $(document).on('turbolinks:load', function(){
 
 $(document).on('turbolinks:load', function(){
 	$('#bulk_submit_test').on('click',function(){
-		$('#logout-modal').fadeIn();
+		$('#submit_modal').fadeIn();
 	});
 
-	$('#logout-no,.close-modal').on('click',function(){
-		$('#logout-modal').fadeOut();
+	$('#select_no,.close_modal').on('click',function(){
+		$('#submit_modal').fadeOut();
 	});
 });
 
+$(document).on('turbolinks:load', function(){
+	$('#collect').on('click',function(){
+		$('#collect_modal').fadeIn();
+	});
+
+	$('#select_no,.close_modal').on('click',function(){
+		$('#collect_modal').fadeOut();
+	});
+});
+
+$(document).on('turbolinks:load', function(){
+	$('#collect_search_word').on('click',function(){
+		$('#collect_search_word_modal').fadeIn();
+	});
+
+	$('#select_no,.close_modal').on('click',function(){
+		$('#collect_search_word_modal').fadeOut();
+	});
+});
+
+$(document).on('turbolinks:load', function(){
+	$('[id^=delete_sender_info_]').on('click',function(){
+		const i = $(this).data("i")
+		$('#delete_modal_'+i).fadeIn();
+	});
+
+	$('[id^=select_no_]').on('click',function(){
+		const i = $(this).data("i")
+		$('#delete_modal_'+i).fadeOut();
+	});
+});
+
+$(document).on('turbolinks:load', function(){
+	$('#confirm_submission').on('click',function(){
+		$('#confirm_modal').fadeIn();
+	});
+
+	$('#select_no,.close_modal').on('click',function(){
+		$('#confirm_modal').fadeOut();
+	});
+});
 
 // $(document).on('turbolinks:load', function(){
 //   $('p').on('click', function() {

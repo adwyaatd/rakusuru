@@ -146,7 +146,7 @@ class S3basesController < ApplicationController
 	def invoke_bulk_submission_lambda
 		if params[:back]
 			pp "戻る"
-			redirect_to s3bases_url
+			redirect_to submit_s3bases_url
 			return
 		elsif params[:shop_ids] && params[:sender_info_id]
 			shops_info_array = []

@@ -55,6 +55,18 @@ class S3SenderInfosController < ApplicationController
 		end
 	end
 
+	def destroy
+		sender_info = S3SenderInfo.find_by(id: params[:id])
+		sender_info.update(
+			disable: 1
+		)
+		if sender_info.save
+			redirect_to s3_sender_infos_url,notice: "削除しました"
+		else
+			render :index
+		end
+	end
+
 	private
 	def sender_info_params
     params.require(:s3_sender_info).permit(:sender_name,:tel,:email,:title,:content,:disable,:is_active)

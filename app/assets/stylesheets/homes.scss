@@ -19,7 +19,7 @@
 }
 
 /*モーダル*/
-.login-modal-wrapper, .signup-modal-wrapper, .logout-modal-wrapper {
+.modal_wrapper {
   position: fixed;
   top: 0;
   right: 0;
@@ -42,7 +42,7 @@
   text-align: center;
 }
 
-.fa-times {
+.fa_times {
   position: absolute;
   top: 12px;
   right: 12px;
@@ -50,17 +50,17 @@
   cursor: pointer;
 }
 
-#signup-form, #login-form {
+#signup_form, #modal_form {
   width: 100%;
 }
 
-#signup-form h2, #login-form h2 {
+#signup_form h2, #modal_form h2 {
   color: #5f5d60;
   letter-spacing: 1px;
   margin-bottom: 40px;
 }
 
-#signup-form input, #login-form input {
+#signup_form input, #modal_form input {
   width: 320px;
   margin-bottom: 20px;
   font-size: 12px;
@@ -69,18 +69,7 @@
   border-radius: 5px;
 }
 
-.submit-btn {
-  display: inline-block;
-  padding: 14px 140px;
-  background-color: #417eef;
-  border: none;
-  border-radius: 3px;
-  margin: 10px auto;
-  cursor: pointer;
-  color: white;
-}
-
-.yes-no {
+.yes_no {
   width: 50%;
   display: inline-block;
   padding: 5px 3px;
@@ -92,7 +81,7 @@
   color: white;
 }
 
-.yes-no a {
+.yes_no a {
   color: white;
 }
 

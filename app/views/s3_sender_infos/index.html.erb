@@ -1,4 +1,4 @@
-<%= link_to"問い合わせページへ戻る",submit_s3bases_path%>
+<%= link_to"問い合わせページへ戻る",submit_s3bases_path,data: {"turbolinks" => false}%>
 <br>
 <h2>テンプレート一覧</h2>
 <div class="container">
@@ -52,8 +52,9 @@
 				<th>メールアドレス</th>
 				<th>件名</th>
 				<th class="th_sender_content">問い合わせ内容</th>
+				<th></th>
 			</tr>
-			<% @sender_infos.each do |info| %>
+			<% @sender_infos.each_with_index do |info,i| %>
 			<tr>
 				<td>
 					<%= link_to "編集",edit_s3_sender_info_path(info) %>
@@ -65,8 +66,27 @@
 				<td><%= info.email %></td>
 				<td><%= info.title %></td>
 				<td><div class="cell-scroll"><%= simple_format info.content %></div></td>
+				<td><a id="delete_sender_info_<%=i%>" data-i="<%=i%>" href= "javascript:void(0)">削除</a></td>
 			</tr>
-				<% end %>
+			<div class="modal_wrapper" id="delete_modal_<%=i%>">
+				<div class="modal">
+					<div class="close_modal">
+						<i class="fa fa_2x fa_times"></i>
+					</div>
+					<div id="modal_form">
+						<h2>削除しますか？</h2>
+						<div class="yes_no">
+							<%= link_to "はい",s3_sender_info_path(id: info.id), method: :delete %>
+						</div>
+						<div id="select_no_<%=i%>" data-i="<%=i%>" class="yes_no">
+							<a>いいえ</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			<% end %>
 		</table>
 	<% end %>
 </div>
+
+<%= javascript_pack_tag 's3base' %>
