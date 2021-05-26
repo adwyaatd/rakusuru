@@ -134,7 +134,7 @@ class S3basesController < ApplicationController
 		else
 			flash[:notice] = "スクレイピング実行中です。少々お待ち下さい。"
 		end
-		redirect_to s3bases_url
+		redirect_to submit_s3bases_url
 	end
 
 	def confirm
