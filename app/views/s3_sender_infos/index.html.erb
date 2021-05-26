@@ -68,6 +68,7 @@
 				<td><div class="cell-scroll"><%= simple_format info.content %></div></td>
 				<td><a id="delete_sender_info_<%=i%>" data-i="<%=i%>" href= "javascript:void(0)">削除</a></td>
 			</tr>
+
 			<div class="modal_wrapper" id="delete_modal_<%=i%>">
 				<div class="modal">
 					<div class="close_modal">
@@ -84,6 +85,7 @@
 					</div>
 				</div>
 			</div>
+
 			<% end %>
 		</table>
 	<% end %>

@@ -41,18 +41,18 @@ class S3SenderInfosController < ApplicationController
 
 	def activate
 		activated_sender_info = S3SenderInfo.find_by(is_active: 1)
-		activated_sender_info.update(
-			is_active: 0
-		)
+		if activated_sender_info
+			activated_sender_info.update(
+				is_active: 0
+			)
+			activated_sender_info.save
+		end
 		sender_info = S3SenderInfo.find_by(id: params[:id])
 		sender_info.update(
 			is_active: 1
 		)
-		if sender_info.save || activated_sender_info.save
-     	redirect_to s3_sender_infos_url,notice: "有効にしました"
-		else
-			render :index
-		end
+		sender_info.save
+    redirect_to s3_sender_infos_url,notice: "有効にしました"
 	end
 
 	def destroy
