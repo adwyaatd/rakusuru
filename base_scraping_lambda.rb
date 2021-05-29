@@ -167,7 +167,7 @@ def scraping(d,wait,page_num,max_page_num)
 					# 	pp "次のショップへ"
 					rescue => e
 						pp "スクレイピングエラー ショップ名:#{shop_name},URL:#{shop_url} 次のショップへ"
-						error_notification(e)
+						simple_error_notification(e)
 						next
 					end
 				end
@@ -268,6 +268,11 @@ end
 def error_notification(e)
   puts "Error! #{e.message},#{e.backtrace.join("\n")}"
   send_line_notification("\n Error! base_scraping \n #{get_current_time} \n search_word:#{@search_word} \n domain:#{@domain} \n #{e.message} \n #{e.backtrace.join("\n")}")
+end
+
+def simple_error_notification(e)
+  puts "Error! #{e.message},#{e.backtrace.join("\n")}"
+  send_line_notification("\n Scraping_warning base_scraping \n #{get_current_time} \n search_word:#{@search_word} \n domain:#{@domain} \n #{e.message}")
 end
 
 def get_current_time
