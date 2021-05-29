@@ -9,7 +9,19 @@ class S3basesController < ApplicationController
 
 	def submit
 		redirect_to new_s3_sender_info_path,notice: "問い合わせテンプレートを登録しましょう" unless S3SenderInfo.where(disable: 0).exists?
-
+		@all_shops = S3base.where(disable: 0)
+		@last_shops = S3base.where(
+			scraping_id: S3base.maximum(:scraping_id),
+			disable: 0
+		)
+		@non_submitted_shops = S3base.where(
+			submit_status: 0,
+			disable: 0
+		)
+		@submitted_shops = S3base.where(
+			submit_status: 1,
+			disable: 0
+		)
 		if params[:search]
 			@shop_datas = S3base.where(
 				"(about_shop LIKE ?) OR (shop_name LIKE ?)",
@@ -19,27 +31,18 @@ class S3basesController < ApplicationController
 				flash[:notice] = "検索したキーワードに該当するショップはありませんでした"
 			end
 		elsif params[:id] == "all"
-			@shop_datas = S3base.where(disable: 0)
+			@shop_datas = @all_shops
 		elsif params[:scraping_id] == "last"
-			@shop_datas = S3base.where(
-				scraping_id: S3base.maximum(:scraping_id),
-				disable: 0
-			)
+			@shop_datas = @last_shops
 		elsif params[:scraping_id]
 			@shop_datas = S3base.where(
 				scraping_id: params[:scraping_id],
 				disable: 0
 			)
 		elsif params[:submit_status] == "0"
-			@shop_datas = S3base.where(
-				submit_status: 0,
-				disable: 0
-			)
+			@shop_datas = @non_submitted_shops
 		elsif params[:submit_status] == "1"
-			@shop_datas = S3base.where(
-				submit_status: 1,
-				disable: 0
-			)
+			@shop_datas = @submitted_shops
 		else
 			@shop_datas = S3base.where(
 				scraping_id: S3base.maximum(:scraping_id),
