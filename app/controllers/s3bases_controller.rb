@@ -9,7 +9,19 @@ class S3basesController < ApplicationController
 
 	def submit
 		redirect_to new_s3_sender_info_path,notice: "問い合わせテンプレートを登録しましょう" unless S3SenderInfo.where(disable: 0).exists?
-
+		@all_shops = S3base.where(disable: 0)
+		@last_shops = S3base.where(
+			scraping_id: S3base.maximum(:scraping_id),
+			disable: 0
+		)
+		@non_submitted_shops = S3base.where(
+			submit_status: 0,
+			disable: 0
+		)
+		@submitted_shops = S3base.where(
+			submit_status: 1,
+			disable: 0
+		)
 		if params[:search]
 			@shop_datas = S3base.where(
 				"(about_shop LIKE ?) OR (shop_name LIKE ?)",
@@ -19,27 +31,18 @@ class S3basesController < ApplicationController
 				flash[:notice] = "検索したキーワードに該当するショップはありませんでした"
 			end
 		elsif params[:id] == "all"
-			@shop_datas = S3base.where(disable: 0)
+			@shop_datas = @all_shops
 		elsif params[:scraping_id] == "last"
-			@shop_datas = S3base.where(
-				scraping_id: S3base.maximum(:scraping_id),
-				disable: 0
-			)
+			@shop_datas = @last_shops
 		elsif params[:scraping_id]
 			@shop_datas = S3base.where(
 				scraping_id: params[:scraping_id],
 				disable: 0
 			)
 		elsif params[:submit_status] == "0"
-			@shop_datas = S3base.where(
-				submit_status: 0,
-				disable: 0
-			)
+			@shop_datas = @non_submitted_shops
 		elsif params[:submit_status] == "1"
-			@shop_datas = S3base.where(
-				submit_status: 1,
-				disable: 0
-			)
+			@shop_datas = @submitted_shops
 		else
 			@shop_datas = S3base.where(
 				scraping_id: S3base.maximum(:scraping_id),
@@ -116,7 +119,7 @@ class S3basesController < ApplicationController
 			logger.debug( "==========================失敗==========================")
 		end # !result_datas.empty?
 
-		redirect_to s3bases_url
+		redirect_to collect_s3bases_url
 	end
 
 	def invoke_base_scraping_lambda
@@ -158,20 +161,23 @@ class S3basesController < ApplicationController
 				shops_info_array.push(one_shop_info_hash)
 			end
 
-			pp shops_info_array
-
-			shops_info_array.each do |s|
-				pp s[:id]
-				pp "shop_name:#{s[:shop_name]}"
-				pp "contact_url:#{s[:contact_url]}"
-				pp s[:submit_status]
-			end
-
 			if shops_info_array.empty?
 				flash[:notice] = "未問い合わせのショップがありません"
-				redirect_to s3bases_url
+				redirect_to submit_s3bases_url
 				return
 			end
+
+			shops_info_array = shops_info_array.each_slice(50).to_a
+			total_number = shops_info_array.size
+
+			# shops_info_array.each do |array|
+			# 	array.each do |s|
+			# 		pp s[:id]
+			# 		pp "shop_name:#{s[:shop_name]}"
+			# 		pp "contact_url:#{s[:contact_url]}"
+			# 		pp s[:submit_status]
+			# 	end
+			# end
 
 			pluck_columns2 = [:sender_name,:tel,:email,:title,:content]
 			sender_info_array = S3SenderInfo.where("(id = ?) AND (disable = ?)", params[:sender_info_id],0).pluck(*pluck_columns2)
@@ -179,15 +185,17 @@ class S3basesController < ApplicationController
 			sender_info_hash = pluck_columns2.zip(sender_info_array[0]).to_h
 				#{:sender_name=>"細田 来夢",:tel=>"09035380252",:email=>"adwyaatd0601@gmail.com",:title=>"ご提案",:content=>"お世話になります。\r\n" + "株式会社HRの細田と申します。\r\n" + "\r\n" + "以下、本文"}
 
-			sqs_message_json = {shops_info_array: shops_info_array,sender_info_hash: sender_info_hash}.to_json
-				#jsonの内容は"/storage/bulk_submission_sqs_example.rb"参照
-			queue_name = "bulk_submission.fifo"
+				queue_name = "bulk_submission.fifo"
 
-			begin
-				if Rails.env.development? || Rails.env.test?
-					# Sqs.send_message(queue_name,sqs_message_json) #ローカル環境では原則submitをしない
-				else
-					Sqs.send_message(queue_name,sqs_message_json)
+				begin
+					shops_info_array.each_with_index do |array,i|
+						sqs_message_json = {shops_info_array: array,sender_info_hash: sender_info_hash,number: i+1,total_number: total_number}.to_json
+							#jsonの内容は"/storage/bulk_submission_sqs_example.rb"参照
+					if Rails.env.development? || Rails.env.test?
+						# Sqs.send_message(queue_name,sqs_message_json,i) #ローカル環境では原則submitをしない
+					elsif Rails.env.production?
+						Sqs.send_message(queue_name,sqs_message_json,i)
+					end
 				end
 				pp "Success! send_message to SQS"
 			rescue => e
@@ -197,15 +205,15 @@ class S3basesController < ApplicationController
 				flash[:notice] = "一括問い合わせ実行中です。少々お待ち下さい。"
 			end
 
-			redirect_to s3bases_url
+			redirect_to submit_s3bases_url
 		else
-			pp "shop_idsとsender_info_idなし"
+			pp "shop_idsかsender_info_idなし"
 			pp "params:#{params}"
-			redirect_to s3bases_url
+			redirect_to submit_s3bases_url,notice: "ショップを選択してください"
 		end
 	rescue => e
 		logger.error("----------------------[error]invoke_bulk_submission_lambda,error:#{e.message},#{e.backtrace.join("\n")} ---------------------------")
-		redirect_to s3bases_url,notice: "エラーが発生しました"
+		redirect_to submit_s3bases_url,notice: "エラーが発生しました"
 	end
 
 	def bulk_submission
@@ -223,10 +231,10 @@ class S3basesController < ApplicationController
 			)
 			logger.debug( "更新成功")
 		else
-			redirect_to s3bases_url,notice: "submit失敗"
+			redirect_to submit_s3bases_url,notice: "submit失敗"
 			return
 		end
-		redirect_to s3bases_url,notice: "問い合わせ完了しました"
+		redirect_to submit_s3bases_url,notice: "問い合わせ完了しました"
 	end
 
 	# private

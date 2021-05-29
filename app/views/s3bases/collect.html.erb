@@ -54,7 +54,11 @@
 					<%= record.scraping_id %>
 				</td>
 				<td>
-					<%= record.search_word %>
+					<% if record.search_word == ""%>
+						なし
+					<% else %>
+						<%= record.search_word %>
+					<% end %>
 				</td>
 				<td>
 					<%= record.domain %>
