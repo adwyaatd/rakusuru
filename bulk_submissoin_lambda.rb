@@ -244,10 +244,13 @@ def lambda_handler(event:, context:)
       sqs_message_hash = event
       pp sqs_message_hash
     end
+    pp "sqs_message_hash"
+    pp sqs_message_hash
 
     shops_info_array = sqs_message_hash["shops_info_array"]
     sender_info_hash = sqs_message_hash["sender_info_hash"]
-
+    number = sqs_message_hash["number"]
+    total_number = sqs_message_hash["total_number"]
     d = setup_driver
     wait = setup_wait
 
@@ -260,13 +263,13 @@ def lambda_handler(event:, context:)
     else
       puts "==========================submit失敗=========================="
       puts "shops_info_array:#{shops_info_array}, \n sender_info_hash:#{sender_info_hash}"
-      send_line_notification("\n bulk_submit 失敗 \n #{get_current_time}")
+      send_line_notification("\n bulk_submit No.#{number}/#{total_number} \n 失敗 \n #{get_current_time}")
       return
     end
   rescue => e
     error_notification(e)
   else
-    send_line_notification("\n bulk_submission 全処理成功 \n #{get_current_time} \n 処理時間:#{get_processing_time(start_time)} \n #{ENV["CFBS_URL"]}")
+    send_line_notification("\n bulk_submission No.#{number}/#{total_number} \n 全処理成功 \n #{get_current_time} \n 処理時間:#{get_processing_time(start_time)} \n #{ENV["CFBS_URL"]}")
     return "All OK"
   end
 end

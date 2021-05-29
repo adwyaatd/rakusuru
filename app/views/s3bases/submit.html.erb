@@ -112,8 +112,11 @@
 				<%= f.submit "チェックしたショップに一括問い合わせ" %>
 				<!--<a id="bulk_submit" href= "javascript:void(0)">チェックしたショップに一括問い合わせ</a>-->
 				<% if Rails.env.development? %>
-					<a id="bulk_submit_test" href= "javascript:void(0)">ショップに一括問い合わせ(テスト用)</a>
+					<a id="bulk_submit_test" href= "javascript:void(0)">ショップに一括問い合わせ(ローカルテスト用)</a>
 				<% end %>
+					<a href="https://thebase.in/inquiry/rhosoda" target="_blank" rel=”noopener noreferrer”>
+						問い合わせページのサンプル(問い合わせOK)
+					</a>
 				<br>
 				<input type="checkbox" id="check_all">
 				<label for="check_all">全チェック</label>
