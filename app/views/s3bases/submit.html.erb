@@ -3,7 +3,7 @@
 <%= link_to"情報収集ページへ",collect_s3bases_path, data: {"turbolinks" => false}%>
 
 <div class="container">
-	<h3>【一括問い合わせ機能】</h3>
+	<!--<h3>【一括問い合わせ機能】</h3>
 	<p>
 		下記ショップ一覧から選択したショップへ、以下のテンプレート内容で一括で問い合わせを行います。
 	</p>
@@ -27,7 +27,7 @@
 			</tr>
 		</table>
 	<% end %>
-	<br>
+	<br>-->
 
 	<p>【ショップを検索】</p>
 	<%= form_with url:submit_s3bases_path ,method: :get,local: true do |f|%>
@@ -43,7 +43,6 @@
 	<br>
 	<%= link_to "全ショップ表示",submit_s3bases_path(id: "all"),data: {"turbolinks" => false} %> <%= @all_shops.count %>店
 </div>
-<br>
 
 <div class="container">
 	<% if @shop_datas%>
@@ -109,14 +108,14 @@
 						</td>
 					</tr>
 				<% end %>
-				<%= f.submit "チェックしたショップに一括問い合わせ" %>
+				<%#= f.submit "チェックしたショップに一括問い合わせ" %>
 				<!--<a id="bulk_submit" href= "javascript:void(0)">チェックしたショップに一括問い合わせ</a>-->
-				<% if Rails.env.development? %>
+				<!--<% if Rails.env.development? %>
 					<a id="bulk_submit_test" href= "javascript:void(0)">ショップに一括問い合わせ(ローカルテスト用)</a>
 				<% end %>
 					<a href="https://thebase.in/inquiry/rhosoda" target="_blank" rel=”noopener noreferrer”>
 						問い合わせページのサンプル(問い合わせOK)
-					</a>
+					</a>-->
 				<br>
 				<input type="checkbox" id="check_all">
 				<label for="check_all">全チェック</label>
