@@ -1,4 +1,4 @@
-<h1>Contact Form Bulk Submission（from BASE）</h1>
+<h1>BASE Shops</h1>
 <% if Rails.env.development? || Rails.env.test? %>
 	<%= link_to"トップページへ戻る",top_homes_path%>
 <% end %>
@@ -6,5 +6,5 @@
 <div class="container">
 	<%= link_to"ショップ情報をネットから収集する", collect_s3bases_path,data: {"turbolinks" => false} %>
 	<br>
-	<%= link_to"ショップへ問い合わせを行う", submit_s3bases_path,data: {"turbolinks" => false} %>
+	<%= link_to"ショップ一覧へ", submit_s3bases_path,data: {"turbolinks" => false} %>
 </div>

@@ -90,6 +90,7 @@ end
 def scraping(d,wait,page_num,max_page_num)
 	pp "検索ページへ遷移"
 	shop_array = []
+	scr_err_cnt = 0
 	begin
 		d.navigate.to 'https://www.google.co.jp/'
 
@@ -118,8 +119,8 @@ def scraping(d,wait,page_num,max_page_num)
 
 				urls.each do |url|
 					# pp "サイトページへ"
-					if url.include?("developers.thebase.in")
-						pp "BASE Developersに入ったので次のショップへ遷移"
+					if url.include?("developers.thebase.in") || url.include?("design.thebase.in")
+						pp "BASEのサイトに入ったので次のショップへ遷移"
 						next
 					end
 
@@ -167,7 +168,8 @@ def scraping(d,wait,page_num,max_page_num)
 					# 	pp "次のショップへ"
 					rescue => e
 						pp "スクレイピングエラー ショップ名:#{shop_name},URL:#{shop_url} 次のショップへ"
-						simple_error_notification(e)
+						pp e.message
+						scr_err_cnt += 1
 						next
 					end
 				end
@@ -193,7 +195,7 @@ def scraping(d,wait,page_num,max_page_num)
 
 	shop_array.uniq!
 
-	return shop_array
+	return shop_array,scr_err_cnt
 end
 
 def check_element(d,attri,val,text="")
@@ -338,7 +340,7 @@ def lambda_handler(event:, context:)
 
 		d = setup_driver
 		wait = setup_wait
-		scraping_result_array = scraping(d,wait,page_num,max_page_num)
+		scraping_result_array,scr_err_cnt = scraping(d,wait,page_num,max_page_num)
 		d.quit
 
 		if !scraping_result_array.empty?
@@ -352,7 +354,7 @@ def lambda_handler(event:, context:)
 	rescue => e
 		error_notification(e)
 	else
-		send_line_notification("\n base_scraping 全処理成功 \n #{get_current_time} \n 処理時間:#{get_processing_time(start_time)} \n search_word:#{@search_word} \n domain:#{@domain} \n#{ENV["CFBS_URL"]}")
+		send_line_notification("\n base_scraping 全処理成功 \n #{get_current_time} \n 処理時間:#{get_processing_time(start_time)} \n search_word:#{@search_word} \n domain:#{@domain} \n#{ENV["CFBS_URL"]} \n scr_err:#{scr_err_cnt}")
 		# stop_nat_instance(i)
 		return "All OK"
 	end
